@@ -1,6 +1,6 @@
 from glob import glob
 import sys, os
-from anygui.Utils import log
+from manygui.Utils import log
 
 try:
     skip_tests = os.environ['ANYGUI_SKIP'].split()

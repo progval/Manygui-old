@@ -95,11 +95,11 @@ Objectives for version 0.2:
 * Change add() signature?
 
 * Add support for complex widgets ("megawidgets") with default
-  implementations in the basic Anygui API (in the vein of the
+  implementations in the basic Manygui API (in the vein of the
   piddle/sping API)
 
   In other words, give a standardised way of integrating
-  backend-specific features into Anygui programs.
+  backend-specific features into Manygui programs.
 
 * Add tree widget and notebook widget
 
@@ -139,7 +139,7 @@ Longer term goals:
 * Add instant model update for text widgets, not just on
   "focus lost"?
 
-* Make Anygui more thread-safe
+* Make Manygui more thread-safe
 
 * Add constructive area geometry to Canvas
 

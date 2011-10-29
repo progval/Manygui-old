@@ -1,3 +1,8 @@
+Version 0.1.2   (not yet released)
+
+   * Forked to Manygui
+   * Port to Python 3
+
 Version 0.1     (06 February 2002)
 
    * Initial release
