@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: anygui
+Version: 0.1.1
+Summary: Generic GUI Package for Python
+Home-page: http://anygui.sf.net
+Author: Magnus Lie Hetland
+Author-email: magnus@hetland.org
+License: MIT License
+Description: Generic GUI Package for Python
+Platform: Any

@@ -1,0 +1,36 @@
+Developers:
+-----------
+
+Magnus Lie Hetland          admin, core, javagui, tkgui, wxgui
+Thomas Heller               core, wxgui, mswgui
+Alex Martelli               dhtmlgui*, core
+Matthew Schinckel           beosgui
+Kalle Svensson              gtkgui
+Joe Knapka                  tkgui, core, cursesgui, textgui
+Shanky Tiwari               qtgui, javagui, fltkgui*
+David Mertz                 cursesgui
+Laura Creighton             tkgui, core
+Dallas T. Johnston          qtgui, gtkgui
+Patrick K. O'Brien          wxgui, core
+
+(* backend not yet implemented)
+
+Other Contributors:
+-------------------
+
+Greg Ewing
+Kevin Altis
+Stephane Conversy
+Laura Creighton
+Robin Dunn
+Warren Kirk
+Samuele Pedroni
+Dmitry Samosseiko
+Amardeep Singh
+Niki Spahiev
+Just van Rossum
+Sebastien Keim
+Andrew McKenzie
+François Granger
+Lalo Martins
+Other members of the Anygui development mailing list
