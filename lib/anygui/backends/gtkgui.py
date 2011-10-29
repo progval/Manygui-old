@@ -62,7 +62,7 @@ class ComponentMixin:
 ################################################################
 
 class Label(ComponentMixin, AbstractLabel):
-    _gtk_class = GtkLabel
+    _gtk_class = Label
 
     def _ensure_created(self):
         self._init_args = (str(self._text),)
@@ -75,7 +75,7 @@ class Label(ComponentMixin, AbstractLabel):
 ################################################################
 
 class Button(ComponentMixin, AbstractButton):
-    _gtk_class = GtkButton
+    _gtk_class = Button
 
     def _ensure_created(self):
         self._init_args = (str(self._text),)
@@ -117,14 +117,14 @@ class ToggleButtonMixin(ComponentMixin):
             self._gtk_comp.children()[0].set_text(str(self._text))
 
 class CheckBox(ToggleButtonMixin, AbstractCheckBox):
-    _gtk_class = GtkCheckButton
+    _gtk_class = CheckButton
 
     def _ensure_created(self):
         self._init_args = (str(self._text),)
         return ComponentMixin._ensure_created(self)
 
 class RadioButton(ToggleButtonMixin, AbstractRadioButton):
-    _gtk_class = GtkRadioButton
+    _gtk_class = RadioButton
 
     def _ensure_created(self):
         if self._group and len(self._group._items) > 1:
@@ -150,10 +150,10 @@ class RadioButton(ToggleButtonMixin, AbstractRadioButton):
 
 ################################################################
 
-class ScrollableListBox(GtkScrolledWindow):
+class ScrollableListBox(ScrolledWindow):
     def __init__(self, *args, **kw):
-        GtkScrolledWindow.__init__(self, *args, **kw)
-        self._listbox = GtkCList()
+        ScrolledWindow.__init__(self, *args, **kw)
+        self._listbox = CList()
         self._listbox.show()
         self.set_policy(POLICY_AUTOMATIC, POLICY_AUTOMATIC)
         self.add_with_viewport(self._listbox)
@@ -191,7 +191,7 @@ class ListBox(ComponentMixin, AbstractListBox):
 ################################################################
 
 class TextField(ComponentMixin, AbstractTextField):
-    _gtk_class = GtkEntry
+    _gtk_class = Entry
     _ignore_changed = 0
 
     def _ensure_created(self):
@@ -242,10 +242,10 @@ class TextField(ComponentMixin, AbstractTextField):
         if not self._ignore_changed:
             self.modify(text=self._backend_text())
 
-class ScrollableTextArea(GtkScrolledWindow):
+class ScrollableTextArea(ScrolledWindow):
     def __init__(self, *args, **kw):
-        GtkScrolledWindow.__init__(self, *args, **kw)
-        self._textarea = GtkText()
+        ScrolledWindow.__init__(self, *args, **kw)
+        self._textarea = Text()
         self._textarea.show()
         self.set_policy(POLICY_AUTOMATIC, POLICY_AUTOMATIC)
         self.add(self._textarea) # _with_viewport(self._textarea)
@@ -307,7 +307,7 @@ class TextArea(ComponentMixin, AbstractTextArea):
 ################################################################
 
 class Frame(ComponentMixin, AbstractFrame):
-    _gtk_class = GtkLayout
+    _gtk_class = Layout
     _visible = 0
     _init_args = ()
 
@@ -317,13 +317,13 @@ class Frame(ComponentMixin, AbstractFrame):
 ################################################################
 
 class Window(ComponentMixin, AbstractWindow):
-    _gtk_class = GtkWindow
+    _gtk_class = Window
     _gtk_style = 0
 
     def _ensure_created(self):
         if self._gtk_comp is None:
             self._gtk_comp = self._gtk_class(WINDOW_TOPLEVEL)
-            self._gtk_container = GtkLayout()
+            self._gtk_container = Layout()
             self._gtk_comp.add(self._gtk_container)
             self._gtk_container.show()
             return 1
