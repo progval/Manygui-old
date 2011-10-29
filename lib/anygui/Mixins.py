@@ -201,7 +201,7 @@ class Attrib:
         # _all_ensures must be computed exactly once per concrete class
         klass = self.__class__
         if '_all_ensures' not in klass.__dict__:
-            klass.__dict__['_all_ensures'] = _get_all_ensures(klass)
+            klass._all_ensures = _get_all_ensures(klass)
         self._ensures_called = []
 
         """
