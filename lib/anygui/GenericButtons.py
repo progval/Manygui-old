@@ -12,4 +12,4 @@ class AbstractGenericButton(AbstractComponent):
             # self._ensure_text()
 
     def _ensure_text(self):
-        raise UnimplementedMethod, (self, "_ensure_text")
+        raise UnimplementedMethod(self, "_ensure_text")

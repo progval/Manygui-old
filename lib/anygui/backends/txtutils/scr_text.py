@@ -1,6 +1,7 @@
 # Curses magic simulated on dumb console.
 
 import os
+from functools import reduce
 
 _debug_messages = 0
 if _debug_messages:
@@ -40,7 +41,7 @@ _ox=0
 _oy=0
 
 try:
-    _xsize,_ysize=map(int,os.environ['ANYGUI_SCREENSIZE'].split('x'))
+    _xsize,_ysize=list(map(int,os.environ['ANYGUI_SCREENSIZE'].split('x')))
     _ysize -= 1 # Leave room for the prompt line.
 except KeyError:
     try:
@@ -99,7 +100,7 @@ def addch(y,x,ch):
 
 def refresh():
     if _inbuf=="":
-        print join(reduce(op.add,_scrbuf),'')
+        print(join(reduce(op.add,_scrbuf),''))
 
 def erase_all():
     if _inbuf!="":
@@ -134,7 +135,7 @@ _inbuf = ""
 def get_char():
     global _inbuf
     if len(_inbuf) == 0:
-        _inbuf = raw_input()
+        _inbuf = input()
     try:
         c = _inbuf[0]
         _inbuf = _inbuf[1:]

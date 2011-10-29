@@ -50,6 +50,7 @@ indicate the sender object and signal name.
 """
 
 from weakref import ref
+import collections
 
 class MessageException:
     """ Exception raised when a message can't be delivered. """
@@ -97,17 +98,17 @@ class _handler_adapter(_weak_callable):
         """ WARNING: POTENTIALLY NON-PORTABLE/PYTHON-VERSION-SPECIFIC CODE """
         if hasattr(func, "func_code"):
             # function
-            fc = func.func_code
+            fc = func.__code__
             expected = fc.co_varnames[0:fc.co_argcount]
         elif hasattr(func, "im_func"):
             # method
-            fc = func.im_func.func_code
+            fc = func.__func__.__code__
             expected = fc.co_varnames[1:fc.co_argcount]
 
         # remove unexpected args - co_flags & 0x08 indicates
         # **kws in use, so no need to remove args.
         if not (fc.co_flags & 0x08):
-            for name in args.keys():
+            for name in list(args.keys()):
                 if name not in expected:
                     del args[name]
         """ END POTENTIALLY NON-PORTABLE/PYTHON-VERSION-SPECIFIC CODE """
@@ -117,7 +118,7 @@ class _handler_adapter(_weak_callable):
         else:
             the_self = (self._obj(),)
 
-        return apply(func, the_self, args)
+        return func(*the_self, **args)
 
 class _weak_ref_fn:
     """ Wraps a function or, more importantly, a bound method, in
@@ -132,11 +133,11 @@ class _weak_ref_fn:
             # First, check to be -sure- fn is not a bound
             # method, or if it is, that handler == fn.im_self:
             try:
-                obj = fn.im_self
+                obj = fn.__self__
                 if obj is not handler:
                     raise MessageException(msg="Handler obj doesn't match bound handler!")
                 self.obj = ref(obj)
-                self.meth = fn.im_func
+                self.meth = fn.__func__
             except AttributeError:
                 # Not a bound method, cool.
                 pass
@@ -149,8 +150,8 @@ class _weak_ref_fn:
         try:
             # Is fn a bound method? If so, convert it into
             # a weakref-to-obj+unbound-method.
-            self.obj = ref(fn.im_self)
-            self.meth = fn.im_func
+            self.obj = ref(fn.__self__)
+            self.meth = fn.__func__
         except AttributeError:
             # It's a global function or other callable.
             self.obj = None
@@ -246,7 +247,7 @@ class _handler_map:
 
     def disconnect_handler_object(self,handler_self):
         """ Remove all handlers associated with handler_self """
-        for sig in self._sigmap.keys():
+        for sig in list(self._sigmap.keys()):
             rmv = []
             for hdlr in self._sigmap[sig]:
                 if hdlr.obj is handler_self:
@@ -259,7 +260,7 @@ class _handler_map:
         If <sig> is None, we do this for every message. """
         if sig is None:
             # Remove all dead handlers.
-            for sig in self._sigmap.keys():
+            for sig in list(self._sigmap.keys()):
                 self.remove_dead_handlers(sig)
             return
 
@@ -286,7 +287,7 @@ class _handler_map:
             if src is None:
                 # Sender object has been gc'd, so we shouldn't
                 # be sending any messages from it!
-                raise MessageException,"Sender object no longer exists"
+                raise MessageException("Sender object no longer exists")
 
         # Deliver the message and associated data to all handlers.
         try:
@@ -317,7 +318,7 @@ def remove_dead_senders():
 
     You should not normally have to call this function.
     """
-    for src in _global_sig_map.keys():
+    for src in list(_global_sig_map.keys()):
         if src is not None:
             if src() is None:
                 del _global_sig_map[src]
@@ -428,7 +429,7 @@ def disconnect_receiver(receiver,sender=None):
     """
     sender = get_sender_ref(sender)
     if sender is None:
-        for src in _global_sig_map.keys():
+        for src in list(_global_sig_map.keys()):
             disconnect_receiver(receiver,src)
         return
 
@@ -564,5 +565,5 @@ class CallbackAdapter:
         message = kwds['message']
         if hasattr(self, message):
             meth = getattr(self, message)
-            if callable(meth):
+            if isinstance(meth, collections.Callable):
                 _handler_adapter(None, meth)(**kwds)

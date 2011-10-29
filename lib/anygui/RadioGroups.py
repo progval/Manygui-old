@@ -2,7 +2,7 @@ from anygui.Exceptions import UnimplementedMethod
 from anygui.Mixins import Attrib, DefaultEventMixin
 from anygui.Events import send
 from anygui import Defaults
-from Utils import flatten
+from .Utils import flatten
 
 class RadioGroup(Attrib, Defaults.RadioGroup, DefaultEventMixin):
 

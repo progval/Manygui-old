@@ -94,8 +94,9 @@ class AbstractComponent(Attrib, DefaultEventMixin):
         "Return the current height."""
         return self._height
 
-    def _set_size(self, (w, h)):
+    def _set_size(self, xxx_todo_changeme):
         """Set a new size."""
+        (w, h) = xxx_todo_changeme
         if (w, h) == (self._width, self._height):
             return
         self._width = w
@@ -105,8 +106,9 @@ class AbstractComponent(Attrib, DefaultEventMixin):
         """Return the current size."""
         return self._width, self._height
 
-    def _set_position(self, (x, y)):
+    def _set_position(self, xxx_todo_changeme1):
         """Set a new position."""
+        (x, y) = xxx_todo_changeme1
         if (x, y) == (self._x, self._y):
             return
         self._x = x
@@ -116,8 +118,9 @@ class AbstractComponent(Attrib, DefaultEventMixin):
         """Return the current position."""
         return self._x, self._y
 
-    def _set_geometry(self, (x, y, w, h)):
+    def _set_geometry(self, xxx_todo_changeme2):
         """Set new position and size."""
+        (x, y, w, h) = xxx_todo_changeme2
         if (x, y, w, h) == (self._x, self._y, self._width, self._height):
             return
         self._x = x
@@ -163,22 +166,22 @@ class AbstractComponent(Attrib, DefaultEventMixin):
     # backend api
 
     def _is_created(self):
-        raise UnimplementedMethod, (self, "_is_created")
+        raise UnimplementedMethod(self, "_is_created")
 
     def _ensure_created(self):
-        raise UnimplementedMethod, (self, "_ensure_created")
+        raise UnimplementedMethod(self, "_ensure_created")
 
     def _ensure_geometry(self):
-        raise UnimplementedMethod, (self, "_ensure_geometry")
+        raise UnimplementedMethod(self, "_ensure_geometry")
 
     def _ensure_visibility(self):
-        raise UnimplementedMethod, (self, "_ensure_visibility")
+        raise UnimplementedMethod(self, "_ensure_visibility")
 
     def _ensure_enabled_state(self):
-        raise UnimplementedMethod, (self, "_ensure_enabled_state")
+        raise UnimplementedMethod(self, "_ensure_enabled_state")
 
     def _ensure_destroyed(self):
-        raise UnimplementedMethod, (self, "_ensure_destroyed")
+        raise UnimplementedMethod(self, "_ensure_destroyed")
 
     def _ensure_events(self):
-        raise UnimplementedMethod, (self, "_ensure_events")
+        raise UnimplementedMethod(self, "_ensure_events")

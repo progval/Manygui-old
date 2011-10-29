@@ -186,7 +186,7 @@ class ComponentMixin:
     def _get_event_help(self):
         items = []
         evmap = self._event_map
-        kk = evmap.keys()
+        kk = list(evmap.keys())
         kk.sort()
         for ch in kk:
             f = evmap[ch]
@@ -406,7 +406,7 @@ class ComponentMixin:
             handled = self._event_map[ev](self,ev)
             return handled
         except KeyError:
-            for (lo,hi) in self._event_range_map.keys():
+            for (lo,hi) in list(self._event_range_map.keys()):
                 if ev>=lo and ev<=hi:
                     handled = self._event_range_map[(lo,hi)](self,ev)
                     return handled
@@ -601,7 +601,7 @@ class ListBox(ComponentMixin, AbstractListBox):
                    UP_ARROW:_select_up,
                    ord(' '):_do_click }
 
-from bmpascii import *
+from .bmpascii import *
 from anygui.Colors import black,white
 class Canvas(ComponentMixin, AbstractCanvas):
     #_text = "Canvas not supported in text mode."
@@ -743,7 +743,7 @@ class Canvas(ComponentMixin, AbstractCanvas):
         j=0
         c=0
         npol = len(ps)
-        for i,j in zip(range(0,npol),range(-1,npol-1)):
+        for i,j in zip(list(range(0,npol)),list(range(-1,npol-1))):
             if ((((ps[i][1]<=y) and (y<ps[j][1])) or
                  ((ps[j][1]<=y) and (y<ps[i][1]))) and
                 (x < (ps[j][0] - ps[i][0]) * (y - ps[i][1]) / (ps[j][1] - ps[i][1]) + ps[i][0])):
@@ -1403,7 +1403,7 @@ _escape_sequence_map = {
 
     }
 
-for seq in _escape_sequence_map.keys():
+for seq in list(_escape_sequence_map.keys()):
     for i in range(1,len(seq)):
         _escape_sequence_map[seq[:i]] = None
 
@@ -1435,8 +1435,8 @@ class Application(AbstractApplication):
             # Pass the exception upwards
             (exc_type, exc_value, exc_traceback) = sys.exc_info()
             if hasattr(exc_value,"value"):
-                print "Exception value:",exc_value.value
-            raise exc_type, exc_value, exc_traceback
+                print("Exception value:",exc_value.value)
+            raise exc_type(exc_value).with_traceback(exc_traceback)
         else:
             # In the event of an error, restore the terminal
             # to a sane state.

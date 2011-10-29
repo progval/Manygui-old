@@ -18,7 +18,7 @@ class ComponentMixin:
         return self._qt_comp is not None
 
     def _ensure_created(self):
-        if DEBUG: print 'in _ensure_created of: ', self
+        if DEBUG: print('in _ensure_created of: ', self)
         if not self._qt_comp:
             if self._container:
                 parent = self._container._qt_comp
@@ -39,12 +39,12 @@ class ComponentMixin:
 
     def _ensure_geometry(self):
         if self._qt_comp:
-            if DEBUG: print 'in _ensure_geometry of: ', self._qt_comp
+            if DEBUG: print('in _ensure_geometry of: ', self._qt_comp)
             self._qt_comp.setGeometry(self._x,self._y,self._width,self._height)
 
     def _ensure_visibility(self):
         if self._qt_comp:
-            if DEBUG: print 'in qt _ensure_visibility: ', self._qt_comp
+            if DEBUG: print('in qt _ensure_visibility: ', self._qt_comp)
             if self._visible:
                 self._qt_comp.show()
             else:
@@ -53,12 +53,12 @@ class ComponentMixin:
     def _ensure_enabled_state(self):
         if self._qt_comp:
             if DEBUG:
-                print 'in qt _ensure_enabled_state: ', self._qt_comp
+                print('in qt _ensure_enabled_state: ', self._qt_comp)
             self._qt_comp.setEnabled(self._enabled)
 
     def _ensure_destroyed(self):
         if self._qt_comp:
-            if DEBUG: print 'in qt _ensure_destroyed: ', self._qt_comp
+            if DEBUG: print('in qt _ensure_destroyed: ', self._qt_comp)
             try: self._connected = 0
             except: pass
             self._qt_comp.destroy()
@@ -76,7 +76,7 @@ class EventFilter(QObject):
     def eventFilter(self, object, event):
         #if DEBUG: print 'in eventFilter of: ', self._window_obj()._qt_comp
         type = event.type()
-        if not type in self._events.keys():
+        if not type in list(self._events.keys()):
             return 0
         return self._events[type](self._comp(), event)
 
@@ -120,14 +120,14 @@ class ListBox(ComponentMixin, AbstractListBox):
             self._qt_comp.setCurrentItem(int(self._selection))
 
     def _ensure_events(self):
-        if DEBUG: print 'in _ensure_events of: ', self
+        if DEBUG: print('in _ensure_events of: ', self)
         if self._qt_comp and not self._connected:
             qApp.connect(self._qt_comp, SIGNAL('highlighted(int)'),\
                          self._qt_item_select_handler)
             self._connected = 1
 
     def _qt_item_select_handler(self, index):
-        if DEBUG: print 'in _qt_item_select_handler of: ', self._qt_comp
+        if DEBUG: print('in _qt_item_select_handler of: ', self._qt_comp)
         self._selection = self._backend_selection()
         #send(self,'select',index=self._qt_comp.index(item),text=str(item.text()))
         send(self,'select')
@@ -140,30 +140,30 @@ class ButtonBase(ComponentMixin):
 
     def _ensure_events(self):
         if self._qt_comp and not self._connected:
-            if DEBUG: print 'in _ensure_events of: ', self._qt_comp
+            if DEBUG: print('in _ensure_events of: ', self._qt_comp)
             qApp.connect(self._qt_comp,SIGNAL('clicked()'),self._qt_click_handler)
             self._connected = 1
 
     def _ensure_text(self):
         if self._qt_comp:
-            if DEBUG: print 'in _ensure_text of: ', self._qt_comp
+            if DEBUG: print('in _ensure_text of: ', self._qt_comp)
             self._qt_comp.setText(self._get_qt_text())
 
     def _get_qt_text(self):
-        if DEBUG: print 'in _get_qt_text of: ', self
+        if DEBUG: print('in _get_qt_text of: ', self)
         return QString(str(self._text))
 
 class Button(ButtonBase, AbstractButton):
     _qt_class = QPushButton
 
     def _qt_click_handler(self):
-        if DEBUG: print 'in _qt_btn_clicked of: ', self._qt_comp
+        if DEBUG: print('in _qt_btn_clicked of: ', self._qt_comp)
         send(self,'click')
 
 class ToggleButtonBase(ButtonBase):
 
     def _ensure_state(self):
-        if DEBUG: print 'in _ensure_state of: ', self._qt_comp
+        if DEBUG: print('in _ensure_state of: ', self._qt_comp)
         if self._qt_comp:
             if not self._qt_comp.isChecked() == self._on:
                 self._qt_comp.setChecked(self._on)
@@ -172,7 +172,7 @@ class CheckBox(ToggleButtonBase, AbstractCheckBox):
     _qt_class = QCheckBox
 
     def _qt_click_handler(self):
-        if DEBUG: print 'in _qt_click_handler of: ', self._qt_comp
+        if DEBUG: print('in _qt_click_handler of: ', self._qt_comp)
         val = self._qt_comp.isChecked()
         if self.on == val:
             return
@@ -183,7 +183,7 @@ class RadioButton(ToggleButtonBase, AbstractRadioButton):
     _qt_class = QRadioButton
 
     def _qt_click_handler(self):
-        if DEBUG: print 'in _qt_click_handler of: ', self._qt_comp
+        if DEBUG: print('in _qt_click_handler of: ', self._qt_comp)
         val = self._qt_comp.isChecked()
         if self._on == val:
             return
@@ -198,20 +198,20 @@ class TextBase(ComponentMixin, AbstractTextField):
 
     def _ensure_events(self):
         if self._qt_comp and not self._connected:
-            events = {QEvent.KeyRelease: self._qt_key_press_handler.im_func,\
-                      QEvent.FocusIn:    self._qt_got_focus_handler.im_func,\
-                      QEvent.FocusOut:   self._qt_lost_focus_handler.im_func}
+            events = {QEvent.KeyRelease: self._qt_key_press_handler.__func__,\
+                      QEvent.FocusIn:    self._qt_got_focus_handler.__func__,\
+                      QEvent.FocusOut:   self._qt_lost_focus_handler.__func__}
             self._event_filter = EventFilter(self, events)
             self._qt_comp.installEventFilter(self._event_filter)
             self._connected = 1
 
     def _ensure_text(self):
         if self._qt_comp:
-            if DEBUG: print 'in _ensure_text of: ', self._qt_comp
+            if DEBUG: print('in _ensure_text of: ', self._qt_comp)
             self._qt_comp.setText(self._get_qt_text())
 
     def _ensure_editable(self):
-        if DEBUG: print 'in _ensure_editable of: ', self._qt_comp
+        if DEBUG: print('in _ensure_editable of: ', self._qt_comp)
         if self._qt_comp:
             self._qt_comp.setReadOnly(not self._editable)
 
@@ -223,7 +223,7 @@ class TextBase(ComponentMixin, AbstractTextField):
         return QString(str(self._text))
 
     def _qt_key_press_handler(self, event):
-        if DEBUG: print 'in _qt_key_press_handler of: ', self._qt_comp
+        if DEBUG: print('in _qt_key_press_handler of: ', self._qt_comp)
         self._text = self._backend_text()
         #self.modify(text=self._backend_text())
         if int(event.key()) == 0x1004: #Qt Return Key Code
@@ -231,12 +231,12 @@ class TextBase(ComponentMixin, AbstractTextField):
         return 1
 
     def _qt_lost_focus_handler(self, event):
-        if DEBUG: print 'in _qt_lost_focus_handler of: ', self._qt_comp
+        if DEBUG: print('in _qt_lost_focus_handler of: ', self._qt_comp)
         return 1
         #   send(self, 'lostfocus')
 
     def _qt_got_focus_handler(self, event):
-        if DEBUG: print 'in _qt_got_focus_handler of: ', self._qt_comp
+        if DEBUG: print('in _qt_got_focus_handler of: ', self._qt_comp)
         return 1
         #   send(self, 'gotfocus')
 
@@ -248,7 +248,7 @@ class TextBase(ComponentMixin, AbstractTextField):
                 start = idx
                 break
         end = start + len(mtxt)
-        if DEBUG: print 'returning => start: %s | end: %s' %(start,end)
+        if DEBUG: print('returning => start: %s | end: %s' %(start,end))
         return start,  end
 
 class TextField(TextBase):
@@ -256,14 +256,14 @@ class TextField(TextBase):
 
     def _ensure_selection(self):
         if self._qt_comp:
-            if DEBUG: print 'in _ensure_selection of: ', self._qt_comp
+            if DEBUG: print('in _ensure_selection of: ', self._qt_comp)
             start, end = self._selection
             self._qt_comp.setSelection(start, end-start)
             self._qt_comp.setCursorPosition(end)
 
     def _backend_selection(self):
         if self._qt_comp:
-            if DEBUG: print 'in _backend_selection of: ', self._qt_comp
+            if DEBUG: print('in _backend_selection of: ', self._qt_comp)
             pos = self._qt_comp.cursorPosition()
             if self._qt_comp.hasMarkedText():
                 text = self._backend_text()
@@ -279,7 +279,7 @@ class TextArea(TextBase):
         #QMultiLineEdit.setSelection is yet to be implemented...
         #Hacked it so that it will work until the proper method can be used.
         if self._qt_comp:
-            if DEBUG: print 'in _ensure_selection of: ', self._qt_comp
+            if DEBUG: print('in _ensure_selection of: ', self._qt_comp)
             start, end = self._selection
             srow, scol = self._qt_translate_row_col(start)
             erow, ecol = self._qt_translate_row_col(end)
@@ -292,11 +292,11 @@ class TextArea(TextBase):
 
     def _backend_selection(self):
         if self._qt_comp:
-            if DEBUG: print 'in _backend_selection of: ', self._qt_comp
+            if DEBUG: print('in _backend_selection of: ', self._qt_comp)
             row, col = self._qt_comp.getCursorPosition()
-            if DEBUG: print 'cursor -> row: %s| col: %s' %(row,col)
+            if DEBUG: print('cursor -> row: %s| col: %s' %(row,col))
             pos = self._qt_translate_position(row, col)
-            if DEBUG: print 'pos of cursor is: ', pos
+            if DEBUG: print('pos of cursor is: ', pos)
             if self._qt_comp.hasMarkedText():
                 text = self._backend_text()
                 mtxt = str(self._qt_comp.markedText())
@@ -308,26 +308,26 @@ class TextArea(TextBase):
         lines = []
         for n in range(0,self._qt_comp.numLines()):
             lines.append(str(self._qt_comp.textLine(n)) + '\n')
-        if DEBUG: print 'lines are: \n', lines
+        if DEBUG: print('lines are: \n', lines)
         return lines
 
     def _qt_translate_row_col(self, pos):
-        if DEBUG: print 'translating pos to row/col...'
+        if DEBUG: print('translating pos to row/col...')
         row, col, curr_row, tot_len = 0, 0, 0, 0
         for ln in self._qt_get_lines():
             if pos <= len(str(ln)) + tot_len:
                 row = curr_row
                 col = pos - tot_len
-                if DEBUG: print 'returning => row: %s| col: %s' %(row,col)
+                if DEBUG: print('returning => row: %s| col: %s' %(row,col))
                 return row, col
             else:
                 curr_row += 1
                 tot_len += len(str(ln))
-        if DEBUG: print 'returning => row: %s| col: %s' %(row,col)
+        if DEBUG: print('returning => row: %s| col: %s' %(row,col))
         return row, col
 
     def _qt_translate_position(self, row, col):
-        if DEBUG: print 'translating row/col to pos...'
+        if DEBUG: print('translating row/col to pos...')
         lines = self._qt_get_lines()
         pos = 0
         for n in range(len(lines)):
@@ -336,7 +336,7 @@ class TextArea(TextBase):
             else:
                 pos += col
                 break
-        if DEBUG: print 'returning pos => ', pos
+        if DEBUG: print('returning pos => ', pos)
         return pos
 
 ################################################################
@@ -359,22 +359,22 @@ class Window(ComponentMixin, AbstractWindow):
 
     def _ensure_title(self):
         if self._qt_comp:
-            if DEBUG: print 'in _ensure_title of: ', self._qt_comp
+            if DEBUG: print('in _ensure_title of: ', self._qt_comp)
             self._qt_comp.setCaption(self._get_qt_title())
 
     def _ensure_events(self):
-        if DEBUG: print 'in _ensure_events of: ', self._qt_comp
+        if DEBUG: print('in _ensure_events of: ', self._qt_comp)
         if self._qt_comp and not self._connected:
-            events = {QEvent.Resize: self._qt_resize_handler.im_func,\
-                      QEvent.Move:   self._qt_move_handler.im_func,\
-                      QEvent.Close:  self._qt_close_handler.im_func}
+            events = {QEvent.Resize: self._qt_resize_handler.__func__,\
+                      QEvent.Move:   self._qt_move_handler.__func__,\
+                      QEvent.Close:  self._qt_close_handler.__func__}
             self._event_filter = EventFilter(self, events)
             self._qt_comp.installEventFilter(self._event_filter)
             self._connected = 1
 
     def _ensure_destroyed(self):
         if self._qt_comp and not self._destroying_self:
-            if DEBUG: print 'in qt _ensure_destroyed: ', self._qt_comp
+            if DEBUG: print('in qt _ensure_destroyed: ', self._qt_comp)
             self._connected = 0
             self._qt_comp.destroy()
             self._qt_comp = None
@@ -386,7 +386,7 @@ class Window(ComponentMixin, AbstractWindow):
         return self._qt_frame
 
     def _qt_resize_handler(self, event):
-        if DEBUG: print 'in _qt_resize_handler of: ', self._qt_comp
+        if DEBUG: print('in _qt_resize_handler of: ', self._qt_comp)
         w = self._qt_comp.width()
         h = self._qt_comp.height()
         dw = w - self._width
@@ -398,7 +398,7 @@ class Window(ComponentMixin, AbstractWindow):
         return 1
 
     def _qt_move_handler(self, event):
-        if DEBUG: print 'in _qt_move_handler of: ', self._qt_comp
+        if DEBUG: print('in _qt_move_handler of: ', self._qt_comp)
         nx = self._qt_comp.x()
         ny = self._qt_comp.y()
         dx = nx - self._x
@@ -410,7 +410,7 @@ class Window(ComponentMixin, AbstractWindow):
         return 1
 
     def _qt_close_handler(self, event):
-        if DEBUG: print 'in _qt_close_handler of: ', self._qt_comp
+        if DEBUG: print('in _qt_close_handler of: ', self._qt_comp)
         # What follows is a dirty hack, but PyQt will seg-fault the
         # interpreter if a call onto QWidget.destroy() is made after
         # the Widget has been closed. It is also necessary to inform
@@ -432,7 +432,7 @@ class Application(AbstractApplication, QApplication):
             argv = list(argv)
             QApplication.__init__(self,argv)
         else:
-            apply(QApplication.__init__,(self,)+argv)
+            QApplication.__init__(*(self,)+argv)
         self.connect(qApp, SIGNAL('lastWindowClosed()'), qApp, SLOT('quit()'))
 
     def _mainloop(self):

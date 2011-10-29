@@ -1,7 +1,7 @@
 #from Mixins import Action
-from Exceptions import UnimplementedMethod
-from Mixins import Attrib
-from Utils import flatten
+from .Exceptions import UnimplementedMethod
+from .Mixins import Attrib
+from .Utils import flatten
 import anygui
 
 class AbstractApplication(Attrib):
@@ -56,4 +56,4 @@ class AbstractApplication(Attrib):
         self._running = 0
 
     def _mainloop(self):
-        raise UnimplementedMethod, (self, "mainloop")
+        raise UnimplementedMethod(self, "mainloop")

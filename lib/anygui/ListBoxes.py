@@ -1,7 +1,7 @@
 from anygui.Components import AbstractComponent
 from anygui.Exceptions import UnimplementedMethod
 from anygui.Models import ListModel
-from UserList import UserList
+from collections import UserList
 from anygui import Defaults
 
 class AnyguiList(UserList):
@@ -39,7 +39,7 @@ class AbstractListBox(AbstractComponent, Defaults.ListBox):
         # self._ensure_selection()
 
     def _ensure_items(self):
-        raise UnimplementedMethod, (self, '_ensure_items')
+        raise UnimplementedMethod(self, '_ensure_items')
 
     def _ensure_selection(self):
-        raise UnimplementedMethod, (self, '_ensure_selection')
+        raise UnimplementedMethod(self, '_ensure_selection')

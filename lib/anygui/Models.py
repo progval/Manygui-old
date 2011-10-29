@@ -1,7 +1,7 @@
 from anygui.Mixins import Attrib
-from Events import link, unlink, send
-from UserList import UserList
-from UserString import UserString
+from .Events import link, unlink, send
+from collections import UserList
+from collections import UserString
 
 
 class Assignee:
@@ -165,12 +165,12 @@ class NumberModel(Model):
     def __hex__(self): return hex(self.value)
     def __int__(self): return int(self.value)
     def __invert__(self): return ~ self.value
-    def __long__(self): return long(self.value)
+    def __long__(self): return int(self.value)
     def __lshift__(self, other): return self.value << other
     def __mod__(self, other): return self.value % other
     def __mul__(self, other): return self.value * other
     def __neg__(self): return - self.value
-    def __nonzero__(self): return self.value != 0
+    def __bool__(self): return self.value != 0
     def __oct__(self): return oct(self.value)
     def __or__(self, other): return self.value | other
     def __pos__(self): return self.value

@@ -32,7 +32,7 @@ class AbstractLabel(AbstractComponent, Defaults.Label):
     #        self._ensure_color()
 
     def _ensure_text(self):
-        raise UnimplementedMethod, (self, "_ensure_text")
+        raise UnimplementedMethod(self, "_ensure_text")
 
     #def _ensure_font(self):
     #    raise UnimplementedMethod, (self, "_ensure_font")

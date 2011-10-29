@@ -1,7 +1,8 @@
 "Mixins: mix-in classes for the anygui package"
 
-from Exceptions import SetAttributeError, GetAttributeError, UnimplementedMethod, InternalError
-from Events import link, send
+from .Exceptions import SetAttributeError, GetAttributeError, UnimplementedMethod, InternalError
+from .Events import link, send
+import collections
 #import weakref
 weakref = None
 
@@ -32,7 +33,7 @@ def _get_all_ensures_helper(klass, theset):
         if name.startswith('_ensure_'):
             if name in _no_auto_ensures: continue
             value = getattr(klass,name)
-            if callable(value): theset[name]=1
+            if isinstance(value, collections.Callable): theset[name]=1
     for base in klass.__bases__: _get_all_ensures_helper(base, theset)
 
 def _get_all_ensures(klass):
@@ -40,7 +41,7 @@ def _get_all_ensures(klass):
     enset = {}
     _get_all_ensures_helper(klass, enset)
     constraints = getattr(klass, '_ensures_constraints', _ensures_constraints)
-    ensures_names = enset.keys()
+    ensures_names = list(enset.keys())
     ensures_names.sort()
     return topological_sort(ensures_names, constraints)
 
@@ -55,7 +56,7 @@ def topological_sort(items, constraints):
     for before, after in constraints:
         if before in items and after in items:
             these_followers = followers.setdefault(before,{})
-            if not these_followers.has_key(after):
+            if after not in these_followers:
                 nleaders[after] = 1 + nleaders.get(after, 0)
                 these_followers[after] = before
     # while there are items, pick one with no leaders, append it
@@ -71,7 +72,7 @@ def topological_sort(items, constraints):
         items.remove(item)
         result.append(item)
         # update the mapping 'nleaders'
-        for follower in followers.get(item,{}).keys():
+        for follower in list(followers.get(item,{}).keys()):
             nleaders[follower] -= 1
     return result
 
@@ -155,9 +156,9 @@ class Attrib:
     def _set_or_mod(self, func, *args, **kwds):
         for opt in args:
             # kwds.update(opt.__dict__) # Doesn't work in Jython 2.1a1
-            for key, val in opt.__dict__.items():
+            for key, val in list(opt.__dict__.items()):
                 kwds[key] = val
-        for name, value in kwds.items():
+        for name, value in list(kwds.items()):
             func(self, name, value)
 
     def set(self, *args, **kwds):
@@ -199,7 +200,7 @@ class Attrib:
     def __init__(self, *args, **kwds):
         # _all_ensures must be computed exactly once per concrete class
         klass = self.__class__
-        if not klass.__dict__.has_key('_all_ensures'):
+        if '_all_ensures' not in klass.__dict__:
             klass.__dict__['_all_ensures'] = _get_all_ensures(klass)
         self._ensures_called = []
 

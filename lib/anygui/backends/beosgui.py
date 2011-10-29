@@ -497,8 +497,8 @@ class TextArea(ComponentMixin, AbstractTextArea):
         back makes it work.  Donn has been notified."""
         self._dummy = self._dummy + 1
         if self._dummy > 1:
-            print """You need to get a bugfixed version of some Bethon files.
-Please look in the Documentation for details, or visit www.bebits.com/app/2501"""
+            print("""You need to get a bugfixed version of some Bethon files.
+Please look in the Documentation for details, or visit www.bebits.com/app/2501""")
         self._beos_sub.MakeFocus(focus)
         self._dummy = 0
         if not focus:
@@ -565,8 +565,8 @@ class Window(ComponentMixin, AbstractWindow):
             try:
                 self._beos_comp.Minimize(not self._visible)
             except AttributeError:
-                print """You might not have the required Bethon replacement files.
-Look in the docs for details, or visit www.bebits.net/app/2501"""
+                print("""You might not have the required Bethon replacement files.
+Look in the docs for details, or visit www.bebits.net/app/2501""")
     
     def _ensure_geometry(self):
         self._beos_bounds = (float(self._x)+10.0,     # Because these are inside
@@ -648,7 +648,7 @@ class Application(WrapThis, AbstractApplication):
     def RefsReceived(self, msg):
         "BeOS hook function called when files dropped on our icon"
         # Don't know if this will work, since we don't really have an icon!
-        print msg.refs
+        print(msg.refs)
             
     def AboutRequested(self):
         about = BAlert.BAlert("About", __doc__, "Dismiss")

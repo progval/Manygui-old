@@ -12,7 +12,7 @@ direction = 'right'
 space = 10
 
 def _list_attributes(klass):
-    klass.explicit_attributes = klass.__dict__.keys()
+    klass.explicit_attributes = list(klass.__dict__.keys())
 
 class Button:
     _text = 'Button'

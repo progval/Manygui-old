@@ -67,20 +67,20 @@ def _backend_passthrough():
         else:
             _backend = name
             return
-    raise RuntimeError, "no usable backend found"
+    raise RuntimeError("no usable backend found")
 
 def application():
     'Return the global application object'
     #global _application
     if not _application:
         #_application = factory()._map['Application']()
-        raise RuntimeError, 'no application exists'
+        raise RuntimeError('no application exists')
     return _application
 
 def backend():
     'Return the name of the current backend'
     if not _backend:
-        raise RuntimeError, 'no backend exists'
+        raise RuntimeError('no backend exists')
     return _backend
 
 # Pass the backend namespace through:

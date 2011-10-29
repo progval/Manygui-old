@@ -21,4 +21,4 @@ class AbstractToggleButton(AbstractGenericButton):
         # self._ensure_state()
 
     def _ensure_state(self):
-        raise UnimplementedMethod, (self, "_ensure_state")
+        raise UnimplementedMethod(self, "_ensure_state")

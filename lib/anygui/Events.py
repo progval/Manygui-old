@@ -24,9 +24,10 @@ __all__ = '''
 
 
 import time
-from References import ref, mapping
+from .References import ref, mapping
+import collections
 registry = mapping()
-from Utils import IdentityStack
+from .Utils import IdentityStack
 source_stack = IdentityStack()
 
 class Internal: pass
@@ -46,9 +47,9 @@ def link(*args, **kwds):
     s = ref(source, weak)
     h = ref(handler, weak)
     h.loop = loop
-    if not registry.has_key(s):
+    if s not in registry:
         registry[s] = {}
-    if not registry[s].has_key(event):
+    if event not in registry[s]:
         registry[s][event] = []
     if not h in registry[s][event]:
         registry[s][event].append(h)
@@ -125,8 +126,8 @@ def unlinkSource(source):
 def unlinkHandler(handler):
     'Unlink a handler from the event framework.'
     h = ref(handler, weak=0)
-    for s in registry.keys():
-        for e in registry[s].keys():
+    for s in list(registry.keys()):
+        for e in list(registry[s].keys()):
             try: retistry[s][e].remove(h)
             except ValueError: pass
 
@@ -134,7 +135,7 @@ def unlinkMethods(obj):
     'Unlink all the methods of obj that are handlers.'
     for name in dir(obj):
         attr = getattr(obj, name)
-        if callable(attr):
+        if isinstance(attr, collections.Callable):
             try:
                 unlinkHandler(attr)
             except: pass
