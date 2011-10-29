@@ -1,5 +1,5 @@
 
-import collections, UserDict, sys, types
+import collections, sys, types
 
 weakref = None
 
@@ -124,7 +124,7 @@ class CallableReference(Hashable):
         return (ref_is(self.obj,other.obj) and
                 ref_is(self.func,other.func))
 
-class RefKeyDictionary(UserDict.UserDict):
+class RefKeyDictionary(collections.UserDict):
 
     def __repr__(self):
         return "<RefKeyDictionary at %s>" % id(self)

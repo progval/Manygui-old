@@ -16,7 +16,6 @@ def dbg(*msg):
 
 
 from anygui.Utils import flatten
-from string import join
 import operator as op
 
 SCR_LVLINE = ord('|')
@@ -100,7 +99,7 @@ def addch(y,x,ch):
 
 def refresh():
     if _inbuf=="":
-        print(join(reduce(op.add,_scrbuf),''))
+        print(str.join(reduce(op.add,_scrbuf),''))
 
 def erase_all():
     if _inbuf!="":

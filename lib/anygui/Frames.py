@@ -1,5 +1,4 @@
 from anygui.Components import AbstractComponent
-from types import TupleType, InstanceType, IntType, ListType
 from anygui.Exceptions import ArgumentError, UnimplementedMethod
 from anygui.Utils import flatten
 from anygui import Defaults
