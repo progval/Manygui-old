@@ -2,7 +2,7 @@
 >>> from anygui.Events import *
 >>> class Test:
 ...     def handle(self, **kw):
-...         print 'Handled!'
+...         print('Handled!')
 ...
 
 Basic functionality:
@@ -73,9 +73,9 @@ Handled!
 Wrapper functions:
 
 >>> def wrapper_test(obj, **kw):
-...     print '<wrapper>'
+...     print('<wrapper>')
 ...     obj.handle()
-...     print '</wrapper>'
+...     print('</wrapper>')
 ...
 >>> s = Test()
 >>> t = Test()
@@ -103,7 +103,7 @@ Return values from event handlers:
 Globbing:
 
 >>> def globbed_handler(**kw):
-...     print 'Here I am!'
+...     print('Here I am!')
 ...
 >>> link(any, any, globbed_handler)
 >>> s = Test()
@@ -121,14 +121,14 @@ Here I am!
 Exception handling:
 
 >>> def faulty_handler(**kw):
-...     print 1/0
+...     print(1/0)
 ...
 >>> s = Test()
 >>> link(s, faulty_handler)
 >>> try:
 ...     send(s)
 ... except:
-...     print 'Caught something'
+...     print('Caught something')
 ...
 Caught something
 
@@ -137,7 +137,7 @@ Relaying with sender wrapper:
 >>> src = 'foo'
 >>> link(src, sender('relayed_event'))
 >>> def relayed_event_handler(**kwds):
-...     print 'Caught relayed_event'
+...     print('Caught relayed_event')
 >>> link(any, 'relayed_event', relayed_event_handler)
 >>> send(src)
 Caught relayed_event
