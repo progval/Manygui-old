@@ -3,7 +3,7 @@ _backends = 'msw gtk java wx tk beos qt curses text'
 import os, sys
 
 __all__ = ['application', 'Application',
-           'Window', 'Button', 'CheckBox', 'Label',
+           'Window', 'Button', 'CheckBox', 'Label', 'Canvas',
            'RadioButton', 'RadioGroup', 'ListBox', 'TextField', 'TextArea',
            'BooleanModel', 'ListModel', 'TextModel', 'Options',
            'LayoutManager', 'Placer',
