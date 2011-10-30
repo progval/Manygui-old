@@ -1,5 +1,7 @@
+#!/usr/bin/env python3
 from glob import glob
 import sys, os
+import manygui
 from manygui.Utils import log
 
 try:
