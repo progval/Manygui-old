@@ -12,7 +12,7 @@ David Mertz                 cursesgui
 Laura Creighton             tkgui, core
 Dallas T. Johnston          qtgui, gtkgui
 Patrick K. O'Brien          wxgui, core
-Valentin Lorentz            core
+Valentin Lorentz            core, qtgui, dummygui
 
 (* backend not yet implemented)
 

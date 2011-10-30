@@ -3,11 +3,15 @@ __all__ = manygui.__all__
 
 ######################################################
 from weakref import ref as wr
-from qt import *
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+
+QString = str # Python 3 rules
+
 TRUE = 1
 FALSE = 0
 
-DEBUG = 0
+from manygui import DEBUG
 TMP_DBG = 1
 
 class ComponentMixin:
@@ -24,12 +28,9 @@ class ComponentMixin:
                 parent = self._container._qt_comp
             else:
                 parent = None
+            new_comp = self._qt_class(parent)
             if self._qt_class == QWindow:
-                new_comp = self._qt_class(parent,self._get_qt_title())
-            elif hasattr(self,'_get_qt_text') and not self._qt_class is QMultiLineEdit:
-                new_comp = self._qt_class(self._get_qt_text(),parent,str(self))
-            else:
-                new_comp = self._qt_class(parent,str(self))
+                new_comp.setWindowTitle(self._get_qt_title())
             self._qt_comp = new_comp
             return 1
         return 0
@@ -63,6 +64,10 @@ class ComponentMixin:
             except: pass
             self._qt_comp.destroy()
             self._qt_comp = None
+
+    def _backend_set_container(self, new):
+        if self._qt_comp:
+            self._qt_comp.setParent(new)
 
 class EventFilter(QObject):
     _comp = None
@@ -102,7 +107,7 @@ class Label(ComponentMixin,AbstractLabel):
 ##########################################################
 
 class ListBox(ComponentMixin, AbstractListBox):
-    _qt_class = QListBox
+    _qt_class = QListWidget
     _connected = 0
 
     def _backend_selection(self):
@@ -141,7 +146,7 @@ class ButtonBase(ComponentMixin):
     def _ensure_events(self):
         if self._qt_comp and not self._connected:
             if DEBUG: print('in _ensure_events of: ', self._qt_comp)
-            qApp.connect(self._qt_comp,SIGNAL('clicked()'),self._qt_click_handler)
+            self._qt_comp.clicked.connect(self._qt_click_handler)
             self._connected = 1
 
     def _ensure_text(self):
@@ -158,7 +163,7 @@ class Button(ButtonBase, AbstractButton):
 
     def _qt_click_handler(self):
         if DEBUG: print('in _qt_btn_clicked of: ', self._qt_comp)
-        send(self,'click')
+        send(self,'default')
 
 class ToggleButtonBase(ButtonBase):
 
@@ -217,7 +222,10 @@ class TextBase(ComponentMixin, AbstractTextField):
 
     def _backend_text(self):
         if self._qt_comp:
-            return str(self._qt_comp.text())
+            try:
+                return str(self._qt_comp.text())
+            except AttributeError:
+                return str(self._qt_comp.toPlainText())
 
     def _get_qt_text(self):
         return QString(str(self._text))
@@ -265,7 +273,7 @@ class TextField(TextBase):
         if self._qt_comp:
             if DEBUG: print('in _backend_selection of: ', self._qt_comp)
             pos = self._qt_comp.cursorPosition()
-            if self._qt_comp.hasMarkedText():
+            if self._qt_comp.hasSelectedText():
                 text = self._backend_text()
                 mtxt = str(self._qt_comp.markedText())
                 return self._qt_calc_start_end(text,mtxt,pos)
@@ -273,43 +281,26 @@ class TextField(TextBase):
                 return pos, pos
 
 class TextArea(TextBase):
-    _qt_class = QMultiLineEdit
+    _qt_class = QTextEdit
 
     def _ensure_selection(self):
-        #QMultiLineEdit.setSelection is yet to be implemented...
+        #QTextEdit.setSelection is yet to be implemented...
         #Hacked it so that it will work until the proper method can be used.
         if self._qt_comp:
             if DEBUG: print('in _ensure_selection of: ', self._qt_comp)
             start, end = self._selection
-            srow, scol = self._qt_translate_row_col(start)
-            erow, ecol = self._qt_translate_row_col(end)
-            #Enter hack...
-            self._qt_comp.setCursorPosition(srow, scol, FALSE)
-            self._qt_comp.setCursorPosition(erow, ecol, TRUE)
-            #Exit hack...
-            #self._qt_comp.setSelection(srow, scol, erow, ecol)
-            #self._qt_comp.setCursorPosition(erow,ecol)
+            cursor = self._qt_comp.textCursor()
+            cursor.setPosition(start)
+            cursor.setPosition(end, QTextCursor.KeepAnchor)
+            self._qt_comp.setTextCursor(cursor)
 
     def _backend_selection(self):
         if self._qt_comp:
-            if DEBUG: print('in _backend_selection of: ', self._qt_comp)
-            row, col = self._qt_comp.getCursorPosition()
-            if DEBUG: print('cursor -> row: %s| col: %s' %(row,col))
-            pos = self._qt_translate_position(row, col)
-            if DEBUG: print('pos of cursor is: ', pos)
-            if self._qt_comp.hasMarkedText():
-                text = self._backend_text()
-                mtxt = str(self._qt_comp.markedText())
-                return self._qt_calc_start_end(text,mtxt,pos)
-            else:
-                return pos, pos
+            cursor = self._qt_comp.textCursor()
+            return (cursor.position(), cursor.anchor())
 
     def _qt_get_lines(self):
-        lines = []
-        for n in range(0,self._qt_comp.numLines()):
-            lines.append(str(self._qt_comp.textLine(n)) + '\n')
-        if DEBUG: print('lines are: \n', lines)
-        return lines
+        return self._qt_comp.toPlainText()
 
     def _qt_translate_row_col(self, pos):
         if DEBUG: print('translating pos to row/col...')
@@ -360,7 +351,7 @@ class Window(ComponentMixin, AbstractWindow):
     def _ensure_title(self):
         if self._qt_comp:
             if DEBUG: print('in _ensure_title of: ', self._qt_comp)
-            self._qt_comp.setCaption(self._get_qt_title())
+            self._qt_comp.setWindowTitle(self._get_qt_title())
 
     def _ensure_events(self):
         if DEBUG: print('in _ensure_events of: ', self._qt_comp)
@@ -395,6 +386,8 @@ class Window(ComponentMixin, AbstractWindow):
         self._width = w
         self._height = h
         self.resized(dw, dh)
+        for item in self._contents:
+            item._ensure_geometry()
         return 1
 
     def _qt_move_handler(self, event):
@@ -436,6 +429,6 @@ class Application(AbstractApplication, QApplication):
         self.connect(qApp, SIGNAL('lastWindowClosed()'), qApp, SLOT('quit()'))
 
     def _mainloop(self):
-        qApp.exec_loop()
+        qApp.exec_()
 
 ################################################################

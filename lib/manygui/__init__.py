@@ -1,9 +1,9 @@
-_backends = 'msw gtk java wx tk beos qt curses text'
+_backends = 'qt msw gtk java wx tk beos curses text'
 
 import os, sys
 
 __all__ = ['application', 'Application',
-           'Window', 'Button', 'CheckBox', 'Label', 'Canvas',
+           'Window', 'Button', 'CheckBox', 'Label',
            'RadioButton', 'RadioGroup', 'ListBox', 'TextField', 'TextArea',
            'BooleanModel', 'ListModel', 'TextModel', 'Options',
            'LayoutManager', 'Placer',

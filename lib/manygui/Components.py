@@ -136,9 +136,13 @@ class AbstractComponent(Attrib, DefaultEventMixin):
         p = self._container
         if p != v and p:
             p._remove(self)
+        self._backend_set_container(v)
         self._container = v
         if v is not None:
             v._add(self)
+
+    def _backend_set_container(self, new):
+        pass
 
     def _get_container(self):
         return self._container
