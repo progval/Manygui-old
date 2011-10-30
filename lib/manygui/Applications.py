@@ -56,4 +56,4 @@ class AbstractApplication(Attrib):
         self._running = 0
 
     def _mainloop(self):
-        raise UnimplementedMethod(self, "mainloop")
+        raise UnimplementedMethod(self, "_mainloop")
