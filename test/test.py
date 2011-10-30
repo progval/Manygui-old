@@ -2,17 +2,8 @@
 from glob import glob
 import sys, os
 
-if hasattr(sys, 'registry'):
-    # Jython:
-    sys.registry.setProperty('MANYGUI_WISHLIST', _backends, 'dummy')
-else:
-    # CPython:
-    os.environ['MANYGUI_WISHLIST'] = 'dummy'
-
 import manygui
 from manygui.Utils import log
-
-assert manygui.backend() == 'dummy'
 
 try:
     skip_tests = os.environ['ANYGUI_SKIP'].split()
