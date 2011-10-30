@@ -105,7 +105,7 @@ def scr_init():
 
     sillychars = 0
     try:
-        sillychars = os.environ['ANYGUI_ALTERNATE_BORDER']
+        sillychars = os.environ['MANYGUI_ALTERNATE_BORDER']
     except KeyError:
         pass
 

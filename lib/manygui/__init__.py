@@ -11,18 +11,18 @@ __all__ = ['application', 'Application',
            'unlinkMethods', 'Frame', 'Placer', 'backend'
            ] # FIXME: Add stuff from Colors and Fonts
 
-# Try to get the environment variables ANYGUI_WISHLIST (overrides
-# manygui.wishlist), and ANYGUI_DEBUG (to print out stacktraces when
+# Try to get the environment variables MANYGUI_WISHLIST (overrides
+# manygui.wishlist), and MANYGUI_DEBUG (to print out stacktraces when
 # importing backends):
 
 if hasattr(sys, 'registry'):
     # Jython:
-    wishlist = sys.registry.getProperty('ANYGUI_WISHLIST', _backends).split()
-    DEBUG = sys.registry.getProperty('ANYGUI_DEBUG', '0')
+    wishlist = sys.registry.getProperty('MANYGUI_WISHLIST', _backends).split()
+    DEBUG = sys.registry.getProperty('MANYGUI_DEBUG', '0')
 else:
     # CPython:
-    wishlist = os.environ.get('ANYGUI_WISHLIST', _backends).split()
-    DEBUG = os.environ.get('ANYGUI_DEBUG', '0')
+    wishlist = os.environ.get('MANYGUI_WISHLIST', _backends).split()
+    DEBUG = os.environ.get('MANYGUI_DEBUG', '0')
 
 # Non-empty string may be zero (i.e. false):
 if DEBUG:

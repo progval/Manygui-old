@@ -8,7 +8,7 @@ import sys
 import os
 if hasattr(sys,'ps1'):
     try:
-        os.environ['ANYGUI_FORCE_CURSES']
+        os.environ['MANYGUI_FORCE_CURSES']
     except KeyError:
         raise ImportError("This appears to be an interactive session; curses disabled.")
 

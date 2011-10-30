@@ -40,7 +40,7 @@ _ox=0
 _oy=0
 
 try:
-    _xsize,_ysize=list(map(int,os.environ['ANYGUI_SCREENSIZE'].split('x')))
+    _xsize,_ysize=list(map(int,os.environ['MANYGUI_SCREENSIZE'].split('x')))
     _ysize -= 1 # Leave room for the prompt line.
 except KeyError:
     try:

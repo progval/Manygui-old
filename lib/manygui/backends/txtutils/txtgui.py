@@ -1347,7 +1347,7 @@ class HelpWindow(Window):
                   "Some terminal emulation programs may not display the",
                   "borders of windows properly when using curses. If",
                   "borders are drawn using strange characters, set",
-                  "the environment variable ANYGUI_ALTERNATE_BORDER",
+                  "the environment variable MANYGUI_ALTERNATE_BORDER",
                   "to a non-zero value."
                   
                   ]
@@ -1446,7 +1446,7 @@ class Application(AbstractApplication):
         # Present the initial help screen, without which the
         # UI remains forever mysterious.
         global _inithelp
-        if not _inithelp and not os.getenv('ANYGUI_CURSES_NOHELP', 0):
+        if not _inithelp and not os.getenv('MANYGUI_CURSES_NOHELP', 0):
             HelpWindow()
             _inithelp = 1
 
