@@ -21,7 +21,47 @@ class Bunch:
     def __init__(self, **kwds):
         self.__dict__.update(kwds)
 
-class Options(Bunch): pass
+class Options(Bunch):
+    def __init__(self, **kwargs):
+        """
+        Options is a very simple class. It is simply used to store a bunch of
+        named values; basically a dictionary with a different syntax. (For
+        more information about the bunch class, see
+        http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/52308.)
+
+        You can set the attributes of an Options object and then supply it as
+        an optional first parameter to the constructors of widgets:
+
+        .. code-block:: python
+
+              opt = Options()
+              opt.width = 100
+              opt.height = 50
+              opt.x = 10
+              btn = Button(opt, y=10)
+              lbl = Label(opt, y=70)
+
+        Here btn and lbl will have the same width, height, and x attributes,
+        but differing y attributes.
+
+        You can also set the attributes of an Options object through its
+        constructur, just like with components:
+
+        .. code-block:: python
+
+              opt = Options(width=100, height=50, x=10)
+
+        Options objects can also be used when supplying arguments to the add
+        method of Frame:
+
+        .. code-block:: python
+
+              # Assuming a Placer LayoutManager:
+              opt = Options(left=10, right=10, hstretch=1)
+              win.add(lbl, opt, top=10)
+              win.add(btn, opt, top=(lbl,10))
+        """
+        Bunch.__init__(self, **kwargs)
 
 import sys
 class Log:

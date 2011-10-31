@@ -1,0 +1,6 @@
+******
+Window
+******
+
+.. autoclass:: manygui.Window
+

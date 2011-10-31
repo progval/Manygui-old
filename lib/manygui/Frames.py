@@ -7,6 +7,10 @@ from manygui.LayoutManagers import Placer
 class AbstractFrame(AbstractComponent, Defaults.Frame):
 
     def __init__(self, *args, **kw):
+        """
+        Frame is a component which can contain other components. Components
+        are added to the Frame with the add method:
+        """
         self._contents = []
         AbstractComponent.__init__(self, *args, **kw)
         self._layout = None
@@ -27,11 +31,21 @@ class AbstractFrame(AbstractComponent, Defaults.Frame):
         return tuple(self._contents)
         
     def add(self,items,options=None,**kws):
-        """ Add the given items to this container, passing the items and
-        the keyword arguments along to the layout manager, if one is
-        present. Note that different layout managers may have different
+        """
+        Adds one or more components. The parameter comp may be either a single
+        component, or a sequence of components. In the latter case, all the
+        components will be added.
+
+        The opts parameter containes an Options object (see below) which gives
+        information about how the object should be laid out. These options can
+        be overridden with keyword arguments, and all this information will be
+        passed to the LayoutManager (see below) of the Frame, if any. This
+        LayoutManager is stored in the layout property.
+
+        Note that different layout managers may have different
         expectations about **kwds, and may impose restrictions on the
-        contents of items. See LayoutManagers.py. """
+        contents of items
+        """
 
         items = flatten(items)
 

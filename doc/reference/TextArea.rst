@@ -1,0 +1,6 @@
+********
+TextArea
+********
+
+.. autoclass:: manygui.TextArea
+

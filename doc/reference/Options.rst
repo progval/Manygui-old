@@ -1,0 +1,7 @@
+*******
+Options
+*******
+
+.. autoclass:: manygui.Options
+
+

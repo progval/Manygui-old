@@ -1,0 +1,6 @@
+*****
+Label
+*****
+
+.. autoclass:: manygui.Label
+

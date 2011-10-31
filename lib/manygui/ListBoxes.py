@@ -15,6 +15,15 @@ class ManyguiList(UserList):
 class AbstractListBox(AbstractComponent, Defaults.ListBox):
 
     def __init__(self, *args, **kw):
+        """
+        Shows a list of options, of which one may be selected. The ListBox has
+        two special attributes: items, a sequence of items to display, and
+        selection, the currently selected (as an index in the items sequence).
+
+        The selection property will be automatically modified (as per the MVC
+        mechanism) when the user makes a selection. This will also cause the
+        ListBox to send a select and a defaultevent.
+        """
         AbstractComponent.__init__(self, *args, **kw)
 
     def _get_items(self):

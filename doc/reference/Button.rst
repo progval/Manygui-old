@@ -1,0 +1,7 @@
+******
+Button
+******
+
+.. autoclass:: manygui.Button
+
+

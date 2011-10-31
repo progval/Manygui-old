@@ -93,7 +93,7 @@ class Attrib:
     Besides __setattr__ and __getattr__ special methods with this
     functionality, Attrib supplies a set method to set many attributes
     and options, and an __init__ with similar functionality.  __init__
-    also handles attributes listed in self.explicit_attributes.
+    also handles attributes listed in self._explicit_attributes.
 
     Another, similar feature of class Attrib: it supplies a modattr method
     that tries to change an attribute's value in-place, if feasible, rather
@@ -205,9 +205,9 @@ class Attrib:
         self._ensures_called = []
 
         """
-        # handle explicit-attributes -- currently [pre 0.1 beta] disabled
+        # handle explicit_attributes -- currently [pre 0.1 beta] disabled
         # (breaks some top-level window geometry/sizing in tkgui [?])
-        try: explicit_attributes_names = self.explicit_attributes
+        try: explicit_attributes_names = self._explicit_attributes
         except AttributeError: pass
         else:
             for internal_name in explicit_attributes_names:

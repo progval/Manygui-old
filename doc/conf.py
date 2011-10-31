@@ -214,3 +214,8 @@ man_pages = [
     ('index', 'manygui', u'Manygui Documentation',
      [u'Manygui contributors'], 1)
 ]
+
+autoclass_content = 'init'
+os.environ['MANYGUI_WISHLIST'] = 'dummy'
+autodoc_default_flags = ['members', 'inherited-members', 'undoc-members']
+

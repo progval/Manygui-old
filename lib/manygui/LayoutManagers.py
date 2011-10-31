@@ -33,9 +33,21 @@ class LayoutManager:
     """
 
     def __init__(self):
+        """
+        A layout manager is responsible for setting the geometry properties of
+        a set of components when their parent Frame changes shape. The default
+        LayoutManager (and the only one supplied with the current release) is
+        :class:`manygui.Placer` (see below).
+
+        .. note::
+           Although Manygui 0.1 comes only with this layout manager, more
+           will appear in the future.
+        """
         self._container = None
 
     def add(self,items,options=None,**kws):
+        """Tell items they are being added to container, call
+        `add_components` and refresh the UI."""
         items = flatten(items)
 
         # Add items to container.
@@ -51,6 +63,7 @@ class LayoutManager:
         self.resized(0,0)
 
     def remove(self,item):
+        """Remove the item from container"""
         if item in self._container._contents:
             return self._container.remove(item)
         else:
@@ -482,16 +495,46 @@ class GridManager(LayoutManager):
 ##############################################################################
 
 class Placer(LayoutManager):
-    """ Implements the placement mechanism described in Greg Ewing's
-    Python GUI API proposal. """
-
     def __init__(self):
+        """
+        A simple but powerful layout manager.
+
+        Implements the placement mechanism described in Greg Ewing's
+        Python GUI API proposal.
+
+        The movement arguments (hmove and vmove) specify (with a Boolean
+        value) whether the Component should be moved (horizontally,
+        vertically, or both) to maintain the given distance to the surrounding
+        Frame's edges; the stretching arguments (hstretch and vstretch)
+        specify whether the Component may be stretched to maintain these
+        distances.
+        """
         LayoutManager.__init__(self)
 
     def add_components(self, *items, **kwds):
-        """Add a list of components to the Frame with positioning,
-        resizing  and scrolling options. See the manual for details.
-        (Yes, I'm too lazy to write it all out here again.)"""
+        """
+        Add a list of components to the Frame with positioning,
+        resizing and scrolling options::
+
+              left         -- the Component's left edge
+              right        -- the Component's right edge
+              top          -- the Component's top edge
+              bottom       -- the Component's bottom edge
+              hmove        -- move horizontally on resize
+              vmove        -- move vertically on resize
+              hstretch     -- stretch horizontally on resize
+              vstretch     -- stretch vertically on resize
+              direction    -- 'left', 'right', 'up', or 'down'
+              space        -- spacing between multiple Components
+
+        The geometry specifiers (left, right, top, and bottom) can be set to
+        either None (the default; will use the Component's existing
+        coordinates), a distance (from the corresponding Frame edge), a
+        Component (will align the edge with the opposite edge of the given
+        component), or a tuple (component, distance) (as with only a
+        Component, except that a gap of size distance is inserted between the
+        two).
+        """
 
         left       = kwds.get('left',       None)
         right      = kwds.get('right',      None)

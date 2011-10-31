@@ -1,7 +1,7 @@
 """Defaults for the manygui package.
 
 Each class in module Defaults provides default attributes for the
-widget of the same name, plus an attribute named explicit_attributes
+widget of the same name, plus an attribute named _explicit_attributes
 that lists the attributes which need to be set explicitly per instance
 (currently, the latter defaults to "all defaulted attributes").
 """
@@ -12,7 +12,7 @@ direction = 'right'
 space = 10
 
 def _list_attributes(klass):
-    klass.explicit_attributes = list(klass.__dict__.keys())
+    klass._explicit_attributes = list(klass.__dict__.keys())
 
 class Button:
     _text = 'Button'

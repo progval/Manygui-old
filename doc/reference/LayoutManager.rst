@@ -1,0 +1,6 @@
+*************
+LayoutManager
+*************
+
+.. autoclass:: manygui.LayoutManager
+

@@ -7,6 +7,23 @@ from manygui import Defaults
 class AbstractWindow(AbstractFrame, Defaults.Window):
 
     def __init__(self, *args, **kw):
+        """
+        A window, plain and simple. Window is a type of Frame, so you can add
+        components to it and set its layout property etc. To make your window
+        appear, you must remember to add it to your Application, just like you
+        add other components to Frames and Windows:
+
+        .. code-block:: python
+
+              win = Window()
+              app = Application()
+              app.add(win)
+              app.run()
+
+        Windows have a title attribute which may be used by the operating
+        system or window manager to identify the window to the user in various
+        ways.
+        """
         AbstractFrame.__init__(self, *args, **kw)
 
         # Window staggering code:

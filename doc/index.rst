@@ -13,6 +13,7 @@ Contents:
 
    quick_start.rst
    tutorial.rst
+   reference/index.rst
 
 Indices and tables
 ==================

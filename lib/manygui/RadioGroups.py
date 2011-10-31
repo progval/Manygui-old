@@ -10,6 +10,9 @@ class RadioGroup(Attrib, Defaults.RadioGroup, DefaultEventMixin):
     def refresh(self, **ignore): pass
 
     def __init__(self, items=[], **kw):
+        """
+        See :class:`manygui.RadioButton`.
+        """
         Attrib.__init__(self, **kw)
         DefaultEventMixin.__init__(self)
         self._items = []

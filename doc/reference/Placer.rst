@@ -1,0 +1,6 @@
+******
+Placer
+******
+
+.. autoclass:: manygui.Placer
+

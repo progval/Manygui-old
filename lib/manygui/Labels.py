@@ -4,6 +4,13 @@ from manygui import Defaults
 
 class AbstractLabel(AbstractComponent, Defaults.Label):
 
+    def __init__(self, *args, **kwargs):
+        """
+        A Label is a simple component which displays a string of text. (Label
+        can only handle one line of text.)
+        """
+        AbstractComponent.__init__(self, *args, **kwargs)
+
     _original_text = Defaults.Label._text
 
     def _get_text(self):
