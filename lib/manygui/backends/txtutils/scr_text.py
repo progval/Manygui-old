@@ -99,7 +99,7 @@ def addch(y,x,ch):
 
 def refresh():
     if _inbuf=="":
-        print(str.join(reduce(op.add,_scrbuf),''))
+        print(''.join(reduce(op.add,_scrbuf)))
 
 def erase_all():
     if _inbuf!="":
