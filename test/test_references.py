@@ -44,10 +44,10 @@ Reference callbacks:
 
 >>> o = Object()
 >>> def cb1(obj, ref):
-...     print 'This is callback 1'
+...     print('This is callback 1')
 ...
 >>> def cb2(obj, ref):
-...     print 'This is callback 2'
+...     print('This is callback 2')
 ...
 >>> r = ref(o, weak=1)
 >>> r.callbacks.append(cb1)
@@ -61,14 +61,14 @@ This is callback 2
 CallableReference:
 
 >>> def func1(x):
-...     print x
+...     print(x)
 >>> class Test:
 ...     def func2(self):
-...         print self
+...         print(self)
 ...     def __repr__(self):
 ...         return '<Test>'
 ...     def __call__(self, x):
-...         print x
+...         print(x)
 ...
 >>> test = Test()
 >>> sc1 = ref(func1, weak=0)
@@ -84,7 +84,7 @@ CallableReference:
 >>> sc6 = ref((test, Test.func2), weak=0)
 >>> wc6 = ref((test, Test.func2), weak=1)
 >>> sc1==wc1, sc2==wc2, sc3==wc3, sc4==wc4, sc5==wc5, sc6==wc6
-(1, 1, 1, 1, 1, 1)
+(True, True, True, True, True, True)
 
 >>> sc1()('Hello, world!')
 Hello, world!
