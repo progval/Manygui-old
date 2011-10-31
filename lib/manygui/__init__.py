@@ -70,7 +70,7 @@ def _backend_passthrough():
     raise RuntimeError("no usable backend found")
 
 def application():
-    'Return the global application object'
+    """Return the global application object"""
     #global _application
     if not _application:
         #_application = factory()._map['Application']()
@@ -79,6 +79,19 @@ def application():
 
 def backend():
     'Return the name of the current backend'
+    """
+    Returns the name (as used in MANYGUI_WISHLIST) of the backend currently
+    in use.
+
+    Example:
+
+    .. code-block:: python
+
+            if backend() == 'wx':
+                some_wx_code()
+            else:
+                some_generic_code()
+    """
     if not _backend:
         raise RuntimeError('no backend exists')
     return _backend

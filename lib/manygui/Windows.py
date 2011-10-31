@@ -8,7 +8,7 @@ class AbstractWindow(AbstractFrame, Defaults.Window):
 
     def __init__(self, *args, **kw):
         """
-        A window, plain and simple. Window is a type of Frame, so you can add
+        A window, plain and simple. Window is a type of :class:`manygui.Frame`, so you can add
         components to it and set its layout property etc. To make your window
         appear, you must remember to add it to your Application, just like you
         add other components to Frames and Windows:
@@ -22,7 +22,20 @@ class AbstractWindow(AbstractFrame, Defaults.Window):
 
         Windows have a title attribute which may be used by the operating
         system or window manager to identify the window to the user in various
-        ways.
+        ways. It also has a size:
+
+        .. code-block:: python
+
+              w = Window()
+              w.title = 'Hello, world!'
+              w.size = (200, 100)
+
+        If we want to, we can supply the widget properties as keyword
+        arguments to the constructor:
+
+        .. code-block:: python
+
+              w = Window(title='Hello, world!', size=(200,100))
         """
         AbstractFrame.__init__(self, *args, **kw)
 

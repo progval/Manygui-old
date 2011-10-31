@@ -162,9 +162,89 @@ class Attrib:
             func(self, name, value)
 
     def set(self, *args, **kwds):
+        """If you want to set multiple attributes of the widget at once,
+        you can use this method instead of setting them directly, just
+        like the constructor:
+
+        .. code-block:: python
+
+              w.set(title='Hello, again', size=(300,200))
+
+        Supplying the same attributes with the same values to a lot of widgets
+        (if you are making several buttons with the same size, for instance)
+        can be a bit impractical (you'll learn more about buttons in a little
+        while):
+
+        .. code-block:: python
+
+              bt1 = Button(left=10, width=50, height=30, text='Button 1')
+              bt2 = Button(left=10, width=50, height=30, text='Button 2')
+              bt3 = Button(left=10, width=50, height=30, text='Button 3')
+
+        To deal with this, the widget constructors (and the set method) can
+        take Options objects as positional parameters:
+
+        .. code-block:: python
+
+              opt = Options(left=10, width=50, height=30)
+              bt1 = Button(opt, text='Button 1')
+              bt2 = Button(opt, text='Button 2')
+              bt3 = Button(opt, text='Button 3')
+
+        As you can see, this saves quite a lot of typing. You can use as many
+        Options arguments as you like.
+        """
         return self._set_or_mod(setattr, *args, **kwds)
 
     def modify(self, *args, **kwds):
+        """
+        Just like set can be used to set the attributes of a Component, the
+        modify method can be used to modify them, without rebinding them to
+        another value. To show the difference, consider the following example
+        (where foo is an attribute that does nothing special):
+
+        .. code-block:: pycon
+
+              >>> from manygui import *
+              >>> btn = Button()
+              >>> some_list = [1, 2, 3]
+              >>> btn.foo = some_list
+              >>> btn.modify(foo=[4, 5, 6])
+              >>> btn.foo
+              [4, 5, 6]
+              >>> some_list
+              [4, 5, 6]
+              >>> btn.set(foo=[7, 8, 9])
+              >>> btn.foo
+              [7, 8, 9]
+              >>> some_list
+              [4, 5, 6]
+
+        As you can see, using modify modifies the list, while set replaces it.
+        The modify method is used for (among other things) implementing
+        Model-View-Controller systems. (More about that later.)
+
+        The modify method works as follows: If there is a specific internal
+        method for modifying an attribute, that is called. Otherwise, the
+        supplied value will be assigned to self.name[:] (where name is the
+        attribute in question). If that doesn't work (a TypeError exception is
+        raised), the value will be assigned to self.name.value. If that
+        doesn't work either, the attribute will be rebound to the new value,
+        with the same result as using set. So, to avoid any in-place
+        modification, all you need to do is use immutable values:
+
+        .. code-block:: pycon
+
+              >>> from manygui import *
+              >>> btn = Button()
+              >>> some_list = [1, 2, 3]
+              >>> btn.foo = tuple(some_list)
+              >>> btn.modify(foo=[4, 5, 6])
+              >>> btn.foo
+              [4, 5, 6]
+              >>> some_list
+              [1, 2, 3]
+        """
         return self._set_or_mod(self.__class__.modattr, *args, **kwds)
 
     def modattr(self, name, value):
@@ -219,6 +299,19 @@ class Attrib:
         self.set(*args, **kwds)
 
     def refresh(self, **ignore_kw):
+        """
+        The modify method is used to modify attributes in-place, e.g. to keep
+        them in sync with a widget. This is done automatically when you change
+        a widget through the graphical interface. In a way, the refresh method
+        works the other way: If you modify an attribute, you can call the
+        refresh method to keep the widget's appearance in sync with its state.
+        When you assign to an attribute, refresh is called automatically; you
+        only have to call it yourself if you have an attribute which is a
+        mutable object, and you modify that object.
+
+        For more info about the use of refresh, see the section "About Models,
+        Views, and Controllers", below.
+        """
         if self._inhibit_refresh: return
         for ensure_name in self._all_ensures:
             if ensure_name in _ensures_once:

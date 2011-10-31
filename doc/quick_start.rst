@@ -429,7 +429,8 @@ The Program
 
    win.height = txt.height + btn.height + 30
 
-   def handler(**kw): txt.text = sentence()
+   def handler(**kw):
+        txt.text = sentence()
    link(btn, 'click', handler)
 
    app = Application()

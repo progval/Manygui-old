@@ -33,7 +33,7 @@ class AbstractApplication(Attrib):
 
     def add(self, win):
         """
-        Adds a Window to the Application, in the same way Components can be
+        Adds a :class:`manygui.Window` to the Application, in the same way Components can be
         added to Frames (see below). A Window will not be visible until it has
         been added to the current Application object, and that Application is
         running. When constructing new Windows after Application.run has been
@@ -54,7 +54,7 @@ class AbstractApplication(Attrib):
 
     def remove(self, win):
         """
-        Removes a Window from the application. This will make the Window
+        Removes a :class:`manygui.Window` from the application. This will make the Window
         disappear.
         """
         try:

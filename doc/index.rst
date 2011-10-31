@@ -13,6 +13,10 @@ Contents:
 
    quick_start.rst
    tutorial.rst
+
+.. toctree::
+   :maxdepth: 3
+
    reference/index.rst
 
 Indices and tables

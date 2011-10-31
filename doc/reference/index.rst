@@ -2,7 +2,18 @@
 Manygui reference
 #################
 
-Components:
+Global functions and design
+===========================
+
+.. toctree::
+   :maxdepth: 2
+
+   global.rst
+   mvc.rst
+   custom_components.rst
+
+Components
+==========
 
 .. toctree::
    :maxdepth: 2

@@ -26,6 +26,7 @@ class AbstractComponent(Attrib, DefaultEventMixin):
         Attrib.__init__(self, *args, **kw)
 
     def destroy(self):
+        """Remove itself from its container and commit suicide."""
         self._set_container(None)
         self._ensure_destroyed()
 

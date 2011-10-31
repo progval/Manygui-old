@@ -218,4 +218,4 @@ man_pages = [
 autoclass_content = 'init'
 os.environ['MANYGUI_WISHLIST'] = 'dummy'
 autodoc_default_flags = ['members', 'inherited-members', 'undoc-members']
-
+autodoc_docstring_signature = True
