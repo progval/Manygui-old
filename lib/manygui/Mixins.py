@@ -234,7 +234,7 @@ class DefaultEventMixin:
     def __init__(self):
         if hasattr(self, '_default_event'):
             link(self, self._default_event, self._default_event_handler,
-                 weak=1, loop=1)
+                 weak=0, loop=1)
 
     def _default_event_handler(self, **kw):
         kw = kw.copy()

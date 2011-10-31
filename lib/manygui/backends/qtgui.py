@@ -163,7 +163,7 @@ class Button(ButtonBase, AbstractButton):
 
     def _qt_click_handler(self):
         if DEBUG: print('in _qt_btn_clicked of: ', self._qt_comp)
-        send(self,'default')
+        send(self,'click')
 
 class ToggleButtonBase(ButtonBase):
 
