@@ -6,7 +6,7 @@ import manygui
 from manygui.Utils import log
 
 try:
-    skip_tests = os.environ['ANYGUI_SKIP'].split()
+    skip_tests = os.environ['MANYGUI_SKIP'].split()
 except:
     skip_tests = []
 skip_tests.sort()
