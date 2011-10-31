@@ -16,6 +16,9 @@ if skip_tests:
         log(test,)
     print()
 
+if manygui.backend() in ('text', 'curses'):
+    manygui.Utils.setLogFile(open('manygui_test.log', 'a'))
+
 run_tests = [test for test in glob('test_*.py') if test not in skip_tests]
 run_tests.sort()
 log('running %d tests:'%len(run_tests),)
