@@ -418,9 +418,13 @@ class Window(ComponentMixin, AbstractWindow):
 ################################################################
 
 class Application(AbstractApplication, QApplication):
+    _created = False
 
     def __init__(self, *argv):
         AbstractApplication.__init__(self)
+        if Application._created:
+            return
+        Application._created = True
         if not argv:
             argv = list(argv)
             QApplication.__init__(self,argv)
