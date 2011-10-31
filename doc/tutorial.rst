@@ -33,34 +33,34 @@ developers, please visit the `Manygui repository`_
 
 Design Goals
 ------------
-  
+
 #. Manygui should be an easy to use GUI package which may be used to
    create simple graphical programs, or which may serve as the basis for
    more complex application frameworks.
-   
+
 #. Manygui should be a pure Python package which serves as a front-end
    for as many as possible of the GUI packages available for Python, in a
    transparent manner.
-   
+
 #. Manygui should include functionality needed to perform most GUI
    tasks, but should remain as simple and basic as possible.
-   
+
 Warning
 -------
-  
+
 The Manygui API is currently very much in flux as the Manygui team keeps
 experimenting with it. Because of that, incompatibilities may occur
 between releases. The current release (0.1.1) should be regarded as a
 prototype.
-   
+
 Tutorial
 --------
-  
+
 There is also a short tutorial available, which is included in the
 installation (doc/quick_start.rst) and is available from the `website`_.
 
 .. _website: https://github.com/ProgVal/Manygui
-   
+
 Installation
 ============
 
@@ -84,10 +84,10 @@ Another possibility is::
 
 No matter which version you choose, you should end up with a directory
 named manygui-0.1.1.
-   
+
 Running setup.py
 ----------------
-  
+
 The simple way of installing Manygui is to use the installation script
 that's included in the distribution. This requires Distutils
 (http://www.python.org/sigs/distutils-sig), which is included in
@@ -106,7 +106,7 @@ install it somewhere else with the --prefix option::
 
 Doing it Manually
 -----------------
-  
+
 Since Manygui consists of only Python code, nothing needs to be
 compiled. And the only thing needed to install Python code is to
 ensure that the packages and modules are found by your Python
@@ -122,10 +122,10 @@ and already have a standard directory where you place your Python
 modules, you can simply copy (or move) the manygui package (found in
 manygui-0.1.1/lib) there, or possibly place a symlink in that directory
 to the manygui package.
-   
+
 Making Sure You Have a Usable GUI Package
 -----------------------------------------
-  
+
 Once you have Manygui installed, you'll want to make sure you have a
 usable GUI package. This is easy to check: Simply start an interactive
 Python interpreter and try to execute the following:
@@ -179,7 +179,7 @@ in Jython, the Java implementation of Python.
         In Mac OS 9, Manygui (using Tkinter) works with with Python
         Classic and recent versions of Python Carbon, but older versions have
         problems with Tkinter.
-   
+
 Using Manygui
 =============
 
@@ -189,7 +189,7 @@ Using Manygui
         directories of the distribution. Remember that the test scripts are
         written to test certain features of Manygui, not to represent
         recommended coding practices.
-   
+
 Using Manygui is simple; it's simply a matter of importing the classes
 and functions you need from the manygui module, e.g.:
 
@@ -214,7 +214,7 @@ this, you call the run method of your Application instance.
 
 Avoiding Namespace Pollution
 ----------------------------
-  
+
 Importing everything from Manygui (as in from manygui import \*) is fine
 for small programs, where you're certain that there will be no name
 clashes. You may also simply import the names you need:
@@ -247,10 +247,10 @@ Then you can instantiate widgets like this:
 
 The examples in this documentation use the starred import, for
 simplicity.
-   
+
 Importing the Backends Directly
 -------------------------------
-  
+
 If you wish to import a backend directly (and "hardwire it" into your
 program), you may do so. For instance, if you wanted to use the
 wxPython backend, wxgui, you'd replace
@@ -271,10 +271,10 @@ McMillan installer (http://www.mcmillan-inc.com/install1.html), or
 with jythonc with the --deep option or equivalent.
 
 .. note::
-   
+
         Compiling jar files of Manygui programs with Jython may not work
         in the current version.
-   
+
 Note that the namespace handling still works just fine:
 
 .. code-block:: python
@@ -283,7 +283,7 @@ Note that the namespace handling still works just fine:
 
 Creating a Window
 -----------------
-  
+
 One of the most important classes in Manygui is Window. Without a
 Window you have no GUI; all the other widgets are added to Windows.
 Knowing this, we may suspect that the following is a minimal Manygui
@@ -315,7 +315,7 @@ arguments to the constructor:
 
 The set Method and the Options Class
 ------------------------------------
-  
+
 If you want to change some attributes of a widget, you can either just
 set them directly, or (if you'd like to set several at once), use the
 set method, just like the constructor:
@@ -347,10 +347,10 @@ take Options objects as positional parameters:
 
 As you can see, this saves quite a lot of typing. You can use as many
 Options arguments as you like.
-   
+
 The modify Method
 -----------------
-  
+
 Just like set can be used to set the attributes of a Component, the
 modify method can be used to modify them, without rebinding them to
 another value. To show the difference, consider the following example
@@ -400,7 +400,7 @@ modification, all you need to do is use immutable values:
 
 The refresh Method
 ------------------
-  
+
 The modify method is used to modify attributes in-place, e.g. to keep
 them in sync with a widget. This is done automatically when you change
 a widget through the graphical interface. In a way, the refresh method
@@ -412,10 +412,10 @@ mutable object, and you modify that object.
 
 For more info about the use of refresh, see the section "About Models,
 Views, and Controllers", below.
-   
+
 Adding a Label
 --------------
-  
+
 Simple labels are created with the Label class:
 
 .. code-block:: python
@@ -432,7 +432,7 @@ its left topmost corner at the point (10,10):
 
 Layout: Placing Widgets in a Frame
 ----------------------------------
-  
+
 This section goves a simple example of positioning Components; for
 more information about the Manygui layout mechanism, please refer to
 the API Reference (below).
@@ -457,7 +457,7 @@ the add method, after the component to be added:
       win.add(lab, opt, left=10)
 
 Placing More Than One Widget
-    
+
 The add method can also position a sequence of widgets. The first
 widget will be placed as before, while the subsequent ones will be
 placed either to the right, to the left, above (up), or below (down),
@@ -475,10 +475,10 @@ according to the direction argument, at a given distance (space):
         arguments, but will treat them differently. If you want to use Options
         objects, place them outside (after) the sequence. For more information
         see the section about the Frame class in the API Reference below.
-   
+
 Buttons and Event Handling
 --------------------------
-  
+
 Buttons (as most components) work more or less the same way as Labels.
 You can set their size, their position, their text, etc. and then add
 them to a Frame (such as a Window). The thing that makes them
@@ -498,10 +498,10 @@ handler may receive several keyword arguments, and if you're not
 particularly interested in any of them, simply use something like
 **args above. (For more information about this, see the section about
 global functions in the API Reference below.)
-   
+
 About Models, Views, and Controllers
 ------------------------------------
-  
+
 The Manygui MVC mechanism (based on the refresh method and the Assignee
 protocol) is described in the API Reference below. Here is a short
 overview on how to use it.
@@ -576,11 +576,11 @@ called automatically, so another way of doing the same thing is:
         Button is resized, rect will be modified. If you don't want this
         behaviour, use a tuple instead of a list, since tuples can't be
         modified.
-   
+
 If you want another object to monitor a model, you can simply use the
 link method, since all models generate an event (of the type default)
 when they are modified.
-   
+
 Example:
 
 .. code-block:: python
@@ -590,7 +590,7 @@ Example:
       >>> mdl.value = 1
       >>> def model_changed(**kw):
       >>>     print 'The model has changed!'
-      
+
       >>> link(mdl, model_changed)
       >>> mdl.value = 0
       The model has changed
@@ -601,10 +601,10 @@ Note the last two lines: We haven't really changed the model, but the
 event handler is called nonetheless. If you want to know whether the
 model really changed, you must retain a copy of its state, and compare
 the new value.
-   
+
 Using CheckBoxes
 ----------------
-  
+
 A CheckBox is a toggle button, a button which can be in one of two
 states, "on" or "off". Except for that, it works more or less like any
 other button in that you can place it, set its text, and link an event
@@ -612,10 +612,10 @@ handler to it.
 
 Whether a CheckBox is currently on or off is indicated by its on
 attribute.
-   
+
 RadioButtons and RadioGroups
 ----------------------------
-  
+
 RadioButtons are toggle buttons, just like CheckBoxes. The main
 differences are that they look slightly different, and that they
 should belong to a RadioGroup.
@@ -645,27 +645,27 @@ This may also be done when constructing the button:
         RadioGroup is not defined by the Manygui API, and may vary across
         backend. Basically, a RadioButton without a RadioGroup is meaningless;
         use a CheckBox instead.
-   
+
 RadioGroups also support an add method, as all other Manygui
 container-like objects:
 
 .. code-block:: python
-   
+
    add(button)
-   
+
 Adds the button to the group, including setting button.group to the
 group. As with the other add methods, the argument may be either a
 single object, or a sequence of objects.
-   
+
 ListBox
 -------
-  
+
 A ListBox is a vertical list of items that can be selected, either by
 clicking on them, or by moving the selection up and down with the
 arrow keys. (For the arrow keys to work, you must make sure that the
 ListBox has keyboard focus. In some backends this requires using the
 tab key.)
-   
+
 .. note::
 
         When using Manygui with Tkinter, using the arrow keys won't
@@ -700,10 +700,10 @@ or
 with the same result. (This is similar to the click event, which is
 default for Buttons; for more information, see the API Reference
 below.)
-   
+
 TextField and TextArea
 ----------------------
-  
+
 Manygui's two text widgets, TextField and TextArea are quite similar.
 The difference between them is that TextField permits neither newlines
 or tab characters to be typed, while TextArea does. Typing a tab in a
@@ -714,10 +714,10 @@ default event type).
 The text in a text component is stored in its text property (a string
 or equivalent), and the current selection is stored in its selection
 property (a tuple of two integer indices).
-   
+
 Making Your Own Components and LayoutManagers
 ---------------------------------------------
-  
+
 Currently, you can create your own components by combining others in
 Frames, and wrapping the whole thing up as a class. One of the main
 reasons for doing this would be to emulate a feature (such as a tabbed
@@ -744,27 +744,27 @@ To get more control over things, you should probably also override the
 two internal methods add_components and remove_component:
 
 .. code-block:: python
-   
+
    add_components(self, *items, **kws)
-   
+
 Should add all the components in items, and associate them with the
 options in kws, for later resizing.
 
 .. code-block:: python
-   
+
    remove_component(self, item)
-   
+
 Should remove the given item.
-   
+
 API Reference
 =============
 
 The following reference describes the full official API of the current
 version (0.1.1) of Manygui.
-   
+
 Environment Variables
 ---------------------
-  
+
 Some environment variables affect the behaviour of the Manygui package.
 These must be set in the environment of the program using Manygui. They
 may either be set permanently through normal operating system channels
@@ -793,7 +793,7 @@ using code like the following before you import Manygui:
 This will probably not work well in Jython, though.
 
 The environment variables used by Manygui are:
-   
+
 MANYGUI_WISHLIST
    A whitespace separated list of backend names in the
    order you wish for Manygui to try to use them. The backends are
@@ -828,12 +828,12 @@ MANYGUI_DEBUG
    value. (If the value supplied can be converted to an integer, it will.
    Otherwise, it will be treated as a string.) This will make Manygui
    print out the stack traces from each backend it tries to import.
-   
+
    There is one exception to this rule: If the true value supplied is the
    name of one of the backends (such as tk or curses) only the traceback
    caused by importing that backend will be shown. This can be useful to
    make the output somewhat less verbose.
-   
+
    Example::
 
       foo:~$ MANYGUI_DEBUG=1 python someprogram.py
@@ -843,14 +843,14 @@ MANYGUI_ALTERNATE_BORDER
    making it use the same border-drawing characters as textgui ('+', '-',
    and '|'). This may be useful if your terminal can't show the special
    curses box-drawing characters properly.
-   
+
 MANYGUI_SCREENSIZE
    Affects textgui. Gives the terminal ("screen")
    dimensions, in characters. This should be in the format widthxheight,
    e.g. 80x24. If this environment variable is not supplied, the standard
    Unix variables COLUMNS and LINES will be used. If neither is provided,
    the default size 80x23 will be used.
-   
+
 MANYGUI_FORCE_CURSES
    Normally, cursesgui will not be selected if you
    are in the interactive interpreter. If you want to force the normal
@@ -858,24 +858,24 @@ MANYGUI_FORCE_CURSES
    you can set this variable to a true value. Note that this is not the
    same as setting MANYGUI_WISHLIST to 'curses', since that will ignore
    all other backends.
-   
+
 MANYGUI_CURSES_NOHELP
    If you don't want the help-screen that appears
    when an Manygui application is started using cursesgui (or textgui),
    you can set this variable to a true value.
-   
+
 Global Functions
 ----------------
-  
+
 application()
 ^^^^^^^^^^^^^
-   
+
 Returns the current Application object.
-   
-   
+
+
 backend()
 ^^^^^^^^^
-   
+
 Returns the name (as used in MANYGUI_WISHLIST) of the backend currently
 in use.
 
@@ -890,7 +890,7 @@ Example:
 
 link(source, [event,] handler, weak=0, loop=0)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-   
+
 Creates a link in the Manygui event system, between the source (any
 object) and the handler (any callable, or a (obj,func) pair, where
 func is an unbound method or function, and obj is an object which will
@@ -992,10 +992,10 @@ see link, above.
    event, not to "event handlers with any source and any event". This may
    change in future releases. The current behaviour of send with any is
    consistent with unlink.
-   
+
 unlink(source, [event,] handler)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-   
+
 Undoes a call to link with the same positional arguments. If handler
 has been registered with either source or event as any, that parameter
 will be irrelevant when deciding whether or not to remove that link.
@@ -1037,10 +1037,10 @@ unlinkSource(source)
 
 Remove the source (and all handlers linked to it) from the event
 framework.
-   
+
 Classes
 -------
-  
+
 Base Classes and Common Behaviour
 
 All components are subclasses of corresponding abstract components
@@ -1084,7 +1084,7 @@ individual classes below.
 
 All Attrib subclasses (including components, Application, and
 RadioGroup) share the following methods:
-   
+
 set(*args, **kwds)
 """"""""""""""""""
 
@@ -1139,10 +1139,10 @@ that, you can simply call its refresh method:
 
 This method checks whether any attributes have changed, and make sure
 that the Component us up to date.
-   
+
 Updating Automatically
 ^^^^^^^^^^^^^^^^^^^^^^
-   
+
 Updating Components explicitly can be useful, but sometimes you would
 want it to be done for you, automatically, each time you modify an
 object that is referred to by a Component attribute. This can be taken
@@ -1160,7 +1160,7 @@ things will happen by themselves:
               send(self)
           def __getitem__(self, i):
               return self.list[i]
-      
+
       lbx = ListBox()
       lbx.items = TriggerList()
       link(lbx.items, lbx.refresh)
@@ -1169,7 +1169,7 @@ Now, if we call lbx.items.append('fourth'), lbx.refresh will
 automatically be called. To make your life easier, Manygui already
 contains some classes that send signals whend they are modified; these
 classes are called Models.
-   
+
 Model and Assignee
 ^^^^^^^^^^^^^^^^^^
 
@@ -1189,10 +1189,10 @@ All models have a value attribute, which contains a "simple" version
 of its state (such as a number for NumberModel, a list for ListModel,
 etc.) Assigning to this attribute is a simple way of modifying the
 model in place.
-   
+
 class Application
 ^^^^^^^^^^^^^^^^^
-   
+
 To instantiate Windows, you must have an Application to manage them.
 You typically instantiate an application at the beginning of your
 program:
@@ -1204,12 +1204,12 @@ program:
 
 In some cases subclassing Application might be a useful way of
 structuring your program, but it is in no way required.
-   
+
    Application has the following methods:
-   
+
 run()
 """""
-   
+
 Starts the main event loop of the graphical user interface. Usually
 called at the end of the program which set up the interface:
 
@@ -1221,7 +1221,7 @@ called at the end of the program which set up the interface:
 
 add(win)
 """"""""
-   
+
 Adds a Window to the Application, in the same way Components can be
 added to Frames (see below). A Window will not be visible until it has
 been added to the current Application object, and that Application is
@@ -1234,22 +1234,22 @@ issue, since no Windows will be appear before that time.)
 
 The parameter win can be either a single Window, or a sequence of
 Windows.
-   
+
 remove(win)
 """""""""""
-   
+
 Removes a Window from the application. This will make the Window
 disappear.
-   
+
 contents
 """"""""
-   
+
 A read-only property containing a tuple of the Windows the Application
 currently manages.
-   
+
 class Button
 ^^^^^^^^^^^^
-   
+
 A component which, when pressed, generate a 'click' event, as well as
 a 'default' event. Thus, in the following example, both handler1 and
 handler2 will be called when the button is pressed:
@@ -1264,7 +1264,7 @@ handler2 will be called when the button is pressed:
 
 class CheckBox
 ^^^^^^^^^^^^^^
-   
+
 CheckBox is a kind of button, and thus will also generate 'click' and
 'default' events when clicked. But in addition, each CheckBox has a
 Boolean attribute on, which is toggled each time the box is clicked.
@@ -1276,16 +1276,16 @@ mechanism) when the user clicks the CheckBox. This will also cause the
 CheckBox to send a click and a defaultevent.
 
 The on attribute is a useful place to use a BooleanModel.
-   
+
 class Frame
 ^^^^^^^^^^^
-   
+
 Frame is a component which can contain other components. Components
 are added to the Frame with the add method:
-   
+
 add(comp, [opts,] **kwds)
 """""""""""""""""""""""""
-   
+
 Adds one or more components. The parameter comp may be either a single
 component, or a sequence of components. In the latter case, all the
 components will be added.
@@ -1295,39 +1295,39 @@ information about how the object should be laid out. These options can
 be overridden with keyword arguments, and all this information will be
 passed to the LayoutManager (see below) of the Frame, if any. This
 LayoutManager is stored in the layout property.
-   
+
 remove(comp)
 """"""""""""
-   
+
 Removes a component from the Frame.
-   
+
 contents
 """"""""
-   
+
 This is a read-only property which contains the contents (a tuple of
 Components) of the Frame.
-   
+
 class Label
 ^^^^^^^^^^^
-   
+
 A Label is a simple component which displays a string of text. (Label
 can only handle one line of text.)
-   
+
 class LayoutManager
 ^^^^^^^^^^^^^^^^^^^
-   
+
 A layout manager is responsible for setting the geometry properties of
 a set of components when their parent Frame changes shape. The default
 LayoutManager (and the only one supplied with the current release) is
 the Placer (see below).
-   
+
 .. note::
    Although Manygui 0.1 comes only with this layout manager, more
    will appear in the future.
-   
+
 class ListBox
 ^^^^^^^^^^^^^
-   
+
 Shows a list of options, of which one may be selected. The ListBox has
 two special attributes: items, a sequence of items to display, and
 selection, the currently selected (as an index in the items sequence).
@@ -1335,7 +1335,7 @@ selection, the currently selected (as an index in the items sequence).
 The selection property will be automatically modified (as per the MVC
 mechanism) when the user makes a selection. This will also cause the
 ListBox to send a select and a defaultevent.
-   
+
 class Model
 ^^^^^^^^^^^
 
@@ -1383,7 +1383,7 @@ method of Frame:
 
 class Placer
 ^^^^^^^^^^^^
-   
+
 A simple but powerful layout manager. When adding components to a
 Frame whose layout attribute is set to a Placer, you can supply the
 following keyword arguments::
@@ -1413,10 +1413,10 @@ vertically, or both) to maintain the given distance to the surrounding
 Frame's edges; the stretching arguments (hstretch and vstretch)
 specify whether the Component may be stretched to maintain these
 distances.
-   
+
 class RadioButton
 ^^^^^^^^^^^^^^^^^
-   
+
 A RadioButton is a toggle button, just like CheckBox, with slightly
 different appearance, and with the difference that it belongs to a
 RadioGroup. Only one RadioButton can be active (have its on attribute
@@ -1429,12 +1429,12 @@ automatically set to that of the active RadioButton. The RadioGroup of
 a RadioButton is set by assigning the RadioGroup to the group
 attribute of the RadioButton. Setting the value attribute of the
 RadioGroup will automatically activate the correct RadioButton.
-   
+
 class RadioGroup
 ^^^^^^^^^^^^^^^^
-   
+
 See RadioButton above.
-   
+
 class TextArea
 ^^^^^^^^^^^^^^
 
@@ -1469,7 +1469,7 @@ add other components to Frames and Windows:
 Windows have a title attribute which may be used by the operating
 system or window manager to identify the window to the user in various
 ways.
-   
+
 Known Problems
 ==============
 
@@ -1494,7 +1494,7 @@ Then, you may either help develop the currently supported GUI
 packages, or you may start writing a backend of your own. Several
 potential backend targets may be found at
 http://starbase.neosoft.com/~claird/comp.lang.python/python_GUI.html.
-   
+
 Manygui License
 ===============
 
