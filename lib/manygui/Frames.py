@@ -6,18 +6,20 @@ from manygui.LayoutManagers import Placer
 
 class AbstractFrame(AbstractComponent, Defaults.Frame):
 
-    def __init__(self, *args, layout=Placer, **kw):
+    def __init__(self, *args, layout=None, **kw):
         """
         Frame is a component which can contain other components. Components
         are added to the Frame with the add method.
 
-        `layout` is the :class:`manygui.LayoutManager` subclass used for placing
+        `layout` is the :class:`manygui.LayoutManager` instance used for placing
         components in the Frame. It defaults to :class:`manygui.Placer`.
         """
+        if layout is None:
+            layout = Placer()
         self._contents = []
         AbstractComponent.__init__(self, *args, **kw)
         self._layout = None
-        self.layout = layout()
+        self.layout = layout
 
     def ensure_created(self):
         if self._ensure_created():
