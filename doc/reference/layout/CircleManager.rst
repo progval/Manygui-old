@@ -1,0 +1,6 @@
+*************
+CircleManager
+*************
+
+.. autoclass:: manygui.CircleManager
+

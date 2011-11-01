@@ -1,0 +1,6 @@
+*****************
+SimpleGridManager
+*****************
+
+.. autoclass:: manygui.SimpleGridManager
+

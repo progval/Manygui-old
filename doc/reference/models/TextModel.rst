@@ -1,0 +1,7 @@
+*********
+TextModel
+*********
+
+.. autoclass:: manygui.TextModel
+
+

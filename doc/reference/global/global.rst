@@ -14,3 +14,5 @@ Global functions
 
 .. autofunction:: manygui.unlinkHandler
 
+.. autofunction:: manygui.unlinkSource
+

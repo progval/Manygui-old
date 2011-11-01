@@ -215,7 +215,7 @@ man_pages = [
      [u'Manygui contributors'], 1)
 ]
 
-autoclass_content = 'init'
+autoclass_content = 'both'
 os.environ['MANYGUI_WISHLIST'] = 'dummy'
 autodoc_default_flags = ['members', 'inherited-members', 'undoc-members']
 autodoc_docstring_signature = True

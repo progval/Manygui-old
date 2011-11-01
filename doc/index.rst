@@ -9,14 +9,10 @@ Welcome to Manygui's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    quick_start.rst
    tutorial.rst
-
-.. toctree::
-   :maxdepth: 3
-
    reference/index.rst
 
 Indices and tables

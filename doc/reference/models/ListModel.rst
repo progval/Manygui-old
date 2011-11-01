@@ -1,0 +1,7 @@
+*********
+ListModel
+*********
+
+.. autoclass:: manygui.ListModel
+
+

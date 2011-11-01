@@ -17,5 +17,5 @@ from manygui.ListBoxes import AbstractListBox
 from manygui.Models import BooleanModel, ListModel, TextModel
 from manygui.Events import *
 from manygui.Frames import AbstractFrame
-from manygui.LayoutManagers import LayoutManager, Placer
+from manygui.LayoutManagers import LayoutManager, Placer, SimpleGridManager, GridManager, CircleManager
 import manygui

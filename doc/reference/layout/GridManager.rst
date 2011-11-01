@@ -1,0 +1,6 @@
+***********
+GridManager
+***********
+
+.. autoclass:: manygui.GridManager
+

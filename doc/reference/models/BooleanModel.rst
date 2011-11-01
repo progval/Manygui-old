@@ -1,0 +1,6 @@
+************
+BooleanModel
+************
+
+.. autoclass:: manygui.BooleanModel
+

@@ -30,13 +30,14 @@ registry = mapping()
 from .Utils import IdentityStack
 source_stack = IdentityStack()
 
+# TODO: remove this?
 class Internal: pass
 any  = Internal()
 void = Internal()
 
 #def link(source, event, handler,  weak=0, loop=0):
 def link(*args, **kwds):
-    """link(source, [event,] handler, weak=0, loop=0)
+    """link(source, event='default', handler, weak=0, loop=0)
 
     Creates a link in the Manygui event system, between the source (any
     object) and the handler (any callable, or a (obj,func) pair, where
@@ -114,7 +115,7 @@ def link(*args, **kwds):
 
 #def unlink(source, event, handler):
 def unlink(*args, **kwds):
-    """unlink(source, [event,] handler)
+    """unlink(source, event='default', handler)
 
     Undoes a call to link with the same positional arguments. If handler
     has been registered with either source or event as any, that parameter
@@ -169,8 +170,6 @@ def lookup(source, event):
     return lists
 
 def send(source, event='default', loop=0, **kw):
-    'Call the appropriate event handlers with the supplied arguments. \
-    As a side-effect, dead handlers are removed from the candidate lists.'
     """send(source, event='default', loop=0, **kwds)
 
     When this is called, any handlers (callables) linked to the source,
