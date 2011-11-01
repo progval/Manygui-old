@@ -49,6 +49,8 @@ class ComponentMixin:
             new_comp = self._qt_class(parent)
             if self._qt_class == QWindow:
                 new_comp.setWindowTitle(self._get_qt_title())
+            if hasattr(new_comp, 'set_container'):
+                new_comp.set_container(self)
             self._qt_comp = new_comp
             return 1
         return 0
@@ -106,6 +108,11 @@ class EventFilter(QObject):
 #########################################################
 
 class QPaintableWidget(QWidget):
+    _container = None
+
+    def set_container(self, container):
+        assert not self._container
+        self._container = container
 
     _paint_callbacks = Fifo()
 
@@ -118,6 +125,10 @@ class QPaintableWidget(QWidget):
                 callback(painter)
         finally:
             painter.end()
+
+    def mousePressEvent(self, event):
+        if DEBUG: print('in mousePressEvent of: ', self)
+        send(self._container, 'click', x=event.x(), y=event.y())
 
 class Canvas(ComponentMixin, AbstractCanvas):
     _qt_class  = QPaintableWidget
