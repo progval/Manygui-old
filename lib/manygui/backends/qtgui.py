@@ -14,6 +14,24 @@ FALSE = 0
 from manygui import DEBUG
 TMP_DBG = 1
 
+class Fifo:
+    """Basic reimplementation of queue.Queue, as Qt does not like it."""
+    def __init__(self):
+        self._queue1 = []
+        self._queue2 = []
+        self._lock = False
+    def put(self, obj):
+        if self._lock and self._queue1 == []:
+            self._queue1, self._queue2, self._lock = self._queue2, [], False
+        if self._lock:
+            self._queue2.append(obj)
+        else:
+            self._queue1.append(obj)
+    def getQueue(self):
+        queue = self._queue1
+        self._queue1, self._queue2 = self._queue1, []
+        return queue
+
 class ComponentMixin:
     _qt_comp = None
     _qt_style = None
@@ -84,6 +102,59 @@ class EventFilter(QObject):
         if not type in list(self._events.keys()):
             return 0
         return self._events[type](self._comp(), event)
+
+#########################################################
+
+class QPaintableWidget(QWidget):
+
+    _paint_callbacks = Fifo()
+
+    def paintEvent(self, event):
+        if DEBUG: print('in paintEvent of: ', self)
+        painter = QPainter()
+        painter.begin(self)
+        try:
+            for callback in self._paint_callbacks.getQueue():
+                callback(painter)
+        finally:
+            painter.end()
+
+class Canvas(ComponentMixin, AbstractCanvas):
+    _qt_class  = QPaintableWidget
+
+    def drawPolygon(self, pointlist, edgeColor = None, edgeWidth=None,
+            fillColor=None, closed=False):
+        if DEBUG: print('in drawPolygon of: ', self)
+        if edgeColor is None:
+            edgeColor = self.defaultLineColor
+        if edgeWidth is None:
+            edgeWidth = self.defaultLineWidth
+        if fillColor is None:
+            fillColor = self.defaultFillColor
+
+        def callback(painter):
+            # Draw the shape
+            pen = QPen()
+            pen.setColor(QColor(edgeColor.red*255, edgeColor.green*255,
+                    edgeColor.blue*255))
+            pen.setWidth(edgeWidth)
+            painter.setPen(pen)
+            polygon = QPolygonF([QPointF(*x) for x in pointlist])
+            painter.drawPolygon(polygon)
+
+            # Fill the shape
+            painter_path = QPainterPath()
+            painter_path.addPolygon(polygon)
+            reversed_pointlist = []
+            if fillColor is not None or fillColor is not Colors.transparent:
+                painter.fillPath(painter_path,
+                        QColor(fillColor.red*255, fillColor.green*255, fillColor.blue*255))
+        self._qt_class._paint_callbacks.put(callback)
+        if self._qt_comp:
+            self._qt_comp.update() # Calls self._qt_comp.paintEvent
+
+    def _ensure_enabled_state(self):
+        pass
 
 #########################################################
 
