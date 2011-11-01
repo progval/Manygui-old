@@ -134,7 +134,7 @@ class Canvas(ComponentMixin, AbstractCanvas):
     _qt_class  = QPaintableWidget
 
     def drawPolygon(self, pointlist, edgeColor = None, edgeWidth=None,
-            fillColor=None, closed=False):
+            fillColor=None, closed=True):
         if DEBUG: print('in drawPolygon of: ', self)
         if edgeColor is None:
             edgeColor = self.defaultLineColor
@@ -142,24 +142,30 @@ class Canvas(ComponentMixin, AbstractCanvas):
             edgeWidth = self.defaultLineWidth
         if fillColor is None:
             fillColor = self.defaultFillColor
+        pointlist = [QPointF(*x) for x in pointlist]
 
         def callback(painter):
             # Draw the shape
             pen = QPen()
             pen.setColor(QColor(edgeColor.red*255, edgeColor.green*255,
-                    edgeColor.blue*255))
+                    edgeColor.blue*255, edgeColor.alpha*255))
             pen.setWidth(edgeWidth)
             painter.setPen(pen)
-            polygon = QPolygonF([QPointF(*x) for x in pointlist])
+            if not closed:
+                # The only way is to move the pen backward to the first point
+                reversed_pointlist = pointlist[:]
+                reversed_pointlist.reverse()
+                pointlist.extend(reversed_pointlist)
+            polygon = QPolygonF(pointlist)
             painter.drawPolygon(polygon)
 
             # Fill the shape
             painter_path = QPainterPath()
             painter_path.addPolygon(polygon)
-            reversed_pointlist = []
             if fillColor is not None or fillColor is not Colors.transparent:
                 painter.fillPath(painter_path,
-                        QColor(fillColor.red*255, fillColor.green*255, fillColor.blue*255))
+                        QColor(fillColor.red*255, fillColor.green*255,
+                        fillColor.blue*255, fillColor.alpha*255))
         self._qt_class._paint_callbacks.put(callback)
         if self._qt_comp:
             self._qt_comp.update() # Calls self._qt_comp.paintEvent

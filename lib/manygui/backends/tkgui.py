@@ -130,7 +130,7 @@ class Canvas(ComponentMixin, AbstractCanvas):
             tkinter.Canvas.update(self._tk_comp)
 
     def drawPolygon(self, pointlist,
-                    edgeColor=None, edgeWidth=None, fillColor=None, closed=0):
+                    edgeColor=None, edgeWidth=None, fillColor=None, closed=True):
         if not self._tk_comp:
             self._deferred_methods.append(("drawPolygon",pointlist,edgeColor,
                                           edgeWidth,fillColor,closed))

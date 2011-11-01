@@ -110,7 +110,7 @@ class AbstractCanvas(AbstractComponent, Defaults.Canvas):
         self.drawPolygon(pointlist, edgeColor, edgeWidth, transparent)
 
     def drawPolygon(self, pointlist, 
-                    edgeColor=None, edgeWidth=None, fillColor=None, closed=0):
+                    edgeColor=None, edgeWidth=None, fillColor=None, closed=1):
         """drawPolygon(pointlist) -- draws a polygon
         pointlist: a list of (x,y) tuples defining vertices
         closed: if 1, adds an extra segment connecting the last point to the first
