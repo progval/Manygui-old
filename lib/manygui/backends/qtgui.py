@@ -198,19 +198,36 @@ class ListBox(ComponentMixin, AbstractListBox):
     _qt_class = QListWidget
     _connected = 0
 
+    def _get_items(self):
+        return ListModel([x.text() for x in self._items])
+
+    def _set_items(self, items):
+        self._items = ListModel([QListWidgetItem(x) for x in items])
+
+    def _get_item_obj(self, item_name):
+        for item in self._items:
+            if item.text() == item_name:
+                return item
+
+    def _ensure_created(self):
+        result = ComponentMixin._ensure_created(self)
+        return result
+
     def _backend_selection(self):
         if self._qt_comp:
             return int(self._qt_comp.currentItem())
 
     def _ensure_items(self):
-        if self._qt_comp:
+        if self._qt_comp is not None:
+            # I don't why, but I have to add 'is not None'. Otherwise, the
+            # condition is always false.
             self._qt_comp.clear()
             for item in self._items:
-                self._qt_comp.insertItem(QString(str(item)),-1)
+                self._qt_comp.insertItem(-1, item)
 
     def _ensure_selection(self):
         if self._qt_comp:
-            self._qt_comp.setCurrentItem(int(self._selection))
+            self._qt_comp.setCurrentItem(self._get_item_obj(self._selection))
 
     def _ensure_events(self):
         if DEBUG: print('in _ensure_events of: ', self)
