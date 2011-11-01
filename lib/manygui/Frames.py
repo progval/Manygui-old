@@ -10,8 +10,9 @@ class AbstractFrame(AbstractComponent, Defaults.Frame):
         """
         Frame is a component which can contain other components. Components
         are added to the Frame with the add method.
-        layout is the :class:`manygui.LayoutManager` class used for placing
-        components in the Frame. It defaults to manygui.Placer.
+
+        `layout` is the :class:`manygui.LayoutManager` subclass used for placing
+        components in the Frame. It defaults to :class:`manygui.Placer`.
         """
         self._contents = []
         AbstractComponent.__init__(self, *args, **kw)
