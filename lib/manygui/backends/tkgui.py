@@ -161,6 +161,13 @@ class Canvas(ComponentMixin, AbstractCanvas):
             item = self._tk_comp.create_line(*pointlist, **d)
             self._items.append(item)
 
+    def _ensure_events(self):
+        if self._tk_comp:
+            self._tk_comp.bind('<ButtonRelease-1>', self._tk_clicked)
+
+    def _tk_clicked(self, event):
+        send(self, 'click', x=event.x, y=event.y)
+
 def _convert_color(c):
     if c is None or c is Colors.transparent: return ''
     return '#%02X%02X%02X' % \
