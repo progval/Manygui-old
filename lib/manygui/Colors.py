@@ -3,46 +3,47 @@ import string # TODO: Change use of string to string methods
 
 class Color:
     """This class is used to represent color.  Components red, green, blue 
-    are in the range 0 (dark) to 1 (full intensity)."""
+    are in the range 0 (dark) to 1 (full intensity).
+    alpha is the alpha channel, and in the range 0 (transparent) to 1
+    (opaque)"""
 
-    def __init__(self, red=0, green=0, blue=0):
-        "Initialize with red, green, blue in range [0-1]."
+    def __init__(self, red=0, green=0, blue=0, alpha=1):
+        "Initialize with red, green, blue, alpha in range [0-1]."
         _float = float
         d = self.__dict__
         d["red"] = _float(red)
         d["green"] = _float(green)
         d["blue"] = _float(blue)
+        d["alpha"] = _float(alpha)
 
     def __setattr__(self, name, value):
         raise TypeError("piddle.Color has read-only attributes")
 
     def __mul__(self,x):
-        return Color(self.red*x, self.green*x, self.blue*x)
+        return Color(self.red*x, self.green*x, self.blue*x, self.alpha*x)
 
-    def __rmul__(self,x):
-        return Color(self.red*x, self.green*x, self.blue*x)
+    __rmul__ = __mul__
     
     def __div__(self,x):
-        return Color(self.red/x, self.green/x, self.blue/x)
+        return Color(self.red/x, self.green/x, self.blue/x, self.alpha*x)
 
-    def __rdiv__(self,x):
-        return Color(self.red/x, self.green/x, self.blue/x)
+    __rdiv__ = __div__
 
     def __add__(self,x):
-        return Color(self.red+x.red, self.green+x.green, self.blue+x.blue)
+        return Color(self.red+x.red, self.green+x.green, self.blue+x.blue, self.alpha+x.alpha)
 
     def __sub__(self,x):
-        return Color(self.red-x.red, self.green-x.green, self.blue-x.blue)
+        return Color(self.red-x.red, self.green-x.green, self.blue-x.blue, self.alpha-x.alpha)
 
     def __repr__(self):
-        return "Color(%1.2f,%1.2f,%1.2f)" % (self.red, self.green, self.blue)
+        return "Color(%1.2f,%1.2f,%1.2f,%1.2f)" % (self.red, self.green, self.blue, self.alpha)
 
     def __hash__(self):
-        return hash( (self.red, self.green, self.blue) )
+        return hash( (self.red, self.green, self.blue, self.alpha) )
 
     def __cmp__(self,other):
         try:
-            dsum = 4*self.red-4*other.red + 2*self.green-2*other.green + self.blue-other.blue
+            dsum = 8*self.red-8*other.red + 4*self.green-4*other.green + 2*self.blue-2*other.blue + self.alpha-other.alpha
         except:
             return -1
         if dsum > 0: return 1
@@ -216,4 +217,4 @@ yellow =         HexColor(0xFFFF00)
 yellowgreen =    HexColor(0x9ACD32)
 
 # special case -- indicates no drawing should be done
-transparent = Color(-1, -1, -1)
+transparent = Color(0, 0, 0, 0)
