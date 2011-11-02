@@ -92,6 +92,12 @@ class events:
     class RightClickEvent(MouseEvent):
         pass
 
+    class PressEvent(MouseEvent):
+        pass
+
+    class ReleaseEvent(MouseEvent):
+        pass
+
     class MouseSelectEvent(MouseEvent, SelectEvent):
         pass
 

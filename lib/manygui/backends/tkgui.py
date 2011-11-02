@@ -166,7 +166,7 @@ class Canvas(ComponentMixin, AbstractCanvas):
             self._tk_comp.bind('<ButtonRelease-1>', self._tk_clicked)
 
     def _tk_clicked(self, event):
-        send(self, events.LeftClickEvent(x=event.x, y=event.y))
+        send(self, 'click', x=event.x, y=event.y)
 
 def _convert_color(c):
     if c is None or c is Colors.transparent: return ''
@@ -243,21 +243,35 @@ class ListBox(ComponentMixin, AbstractListBox):
 
 ################################################################
 
-class Button(ComponentMixin, AbstractButton):
-    _tk_class = Button
+class ButtonBase(ComponentMixin):
 
     def _ensure_events(self):
         if self._tk_comp:
-            self._tk_comp.config(command=self._tk_clicked)
+            self._tk_comp.bind('<Return>', self._tk_clicked) # Press enter key
+            self._tk_comp.bind('<Button-1>', self._tk_clicked)
+            self._tk_comp.bind('<ButtonRelease-1>', self._tk_released)
 
-    def _tk_clicked(self):
-        send(self)
+    def _tk_clicked(self, event):
+        # With Tk, "click, press = press, None"
+        send(self, events.LeftClickEvent())
+        send(self, events.PressEvent())
+
+    def _tk_released(self, event):
+        send(self, events.ReleaseEvent())
 
     def _ensure_text(self):
         if self._tk_comp:
             self._tk_comp.configure(text=self._text)
 
-class ToggleButtonMixin(ComponentMixin):
+class Button(ButtonBase, AbstractButton):
+    _tk_class = Button
+
+class ToggleButtonMixin(ButtonBase):
+
+    def _ensure_events(self):
+        ButtonBase._ensure_events(self)
+        if self._tk_comp:
+            self._tk_comp.config(command=self._tk_toggle)
 
     def _ensure_state(self):
         if self._tk_comp is not None:
@@ -270,24 +284,21 @@ class ToggleButtonMixin(ComponentMixin):
             self._tk_comp.config(variable=self._var, anchor=W)
         return result
 
-    def _ensure_events(self):
-        self._tk_comp.config(command=self._tk_clicked)
-
     def _ensure_text(self):
         if self._tk_comp:
             self._tk_comp.configure(text=self._text)
 
+    def _tk_toggle(self):
+        self.modify(on=not self.on)
+        send(self, events.ToggleEvent())
+
 class CheckBox(ToggleButtonMixin, AbstractCheckBox):
     _tk_class = Checkbutton
-
-    def _tk_clicked(self):
-        self.modify(on=not self.on)
-        send(self)
 
 class RadioButton(ToggleButtonMixin, AbstractRadioButton):
     _tk_class = Radiobutton
 
-    def _tk_clicked(self):
+    def _tk_clicked(self, event):
         if self.group is not None:
             self.group.modify(value=self.value)
         send(self)

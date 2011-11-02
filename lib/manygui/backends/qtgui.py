@@ -253,6 +253,9 @@ class ButtonBase(ComponentMixin):
         if self._qt_comp and not self._connected:
             if DEBUG: print('in _ensure_events of: ', self._qt_comp)
             self._qt_comp.clicked.connect(self._qt_click_handler)
+            self._qt_comp.pressed.connect(self._qt_press_handler)
+            self._qt_comp.released.connect(self._qt_release_handler)
+            self._qt_comp.toggled.connect(self._qt_toggle_handler)
             self._connected = 1
 
     def _ensure_text(self):
@@ -264,14 +267,27 @@ class ButtonBase(ComponentMixin):
         if DEBUG: print('in _get_qt_text of: ', self)
         return QString(str(self._text))
 
+    def _qt_click_handler(self):
+        if DEBUG: print('in _qt_btn_click of: ', self._qt_comp)
+        send(self, events.LeftClickEvent())
+
+    def _qt_press_handler(self):
+        if DEBUG: print('in _qt_btn_press of: ', self._qt_comp)
+        send(self, events.PressEvent())
+
+    def _qt_release_handler(self):
+        if DEBUG: print('in _qt_btn_release of: ', self._qt_comp)
+        send(self, events.ReleaseEvent())
+
+    def _qt_toggle_handler(self):
+        if DEBUG: print('in _qt_btn_toggle of: ', self._qt_comp)
+        send(self, events.ToggleEvent())
+
 class Button(ButtonBase, AbstractButton):
     _qt_class = QPushButton
 
-    def _qt_click_handler(self):
-        if DEBUG: print('in _qt_btn_clicked of: ', self._qt_comp)
-        send(self)
-
 class ToggleButtonBase(ButtonBase):
+    DefaultEvent = events.ToggleEvent
 
     def _ensure_state(self):
         if DEBUG: print('in _ensure_state of: ', self._qt_comp)
@@ -279,16 +295,16 @@ class ToggleButtonBase(ButtonBase):
             if not self._qt_comp.isChecked() == self._on:
                 self._qt_comp.setChecked(self._on)
 
-class CheckBox(ToggleButtonBase, AbstractCheckBox):
-    _qt_class = QCheckBox
-
-    def _qt_click_handler(self):
+    def _qt_toggle_handler(self):
         if DEBUG: print('in _qt_click_handler of: ', self._qt_comp)
         val = self._qt_comp.isChecked()
         if self.on == val:
             return
         self.modify(on=val)
         send(self)
+
+class CheckBox(ToggleButtonBase, AbstractCheckBox):
+    _qt_class = QCheckBox
 
 class RadioButton(ToggleButtonBase, AbstractRadioButton):
     _qt_class = QRadioButton

@@ -15,9 +15,13 @@ def say_hello(**kw):
     g_y += 5
     win.add(btn)
 
+def print_event(source, event):
+    print(repr(event))
+
 opt = Options(x = 30, width = 50, height = 30)
 btn = Button(opt, y = 30, text = "Hello")
 link(btn, say_hello)
+link(btn, any, print_event)
 dis = Button(opt, y = 90, text = "Goodbye", enabled = 0)
 link(dis, say_hello)
 
