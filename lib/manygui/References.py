@@ -93,6 +93,9 @@ def unwrap(func):
     return obj, func
 
 class CallableReference:
+
+    # RefKeyDictionnary wants it...
+    callbacks = []
     
     def __init__(self, func, weak):
         obj, func = unwrap(func)

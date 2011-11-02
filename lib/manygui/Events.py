@@ -2,6 +2,7 @@
 ''' Event framework for Manygui.
 
     Magnus Lie Hetland 2001-11-26
+    Valentin Lorentz 2011
 '''
 
 TODO = '''
@@ -12,6 +13,7 @@ TODO = '''
 __all__ = '''
 
     any
+    events
     link
     unlink
     send
@@ -27,17 +29,91 @@ import time
 from .References import ref, mapping
 import collections
 registry = mapping()
+from .Mixins import Attrib
 from .Utils import IdentityStack
+from . import Devices
 source_stack = IdentityStack()
 
-# TODO: remove this?
 class Internal: pass
-any  = Internal()
-void = Internal()
+any  = Internal
+void = Internal
+
+class events:
+    """Namespace for all event types."""
+    class AbstractEvent(Attrib):
+        """Base event."""
+        device = None
+        """The device which triggered the event (mouse, keyboard, ...)."""
+        time = None
+        """The timestamp at the moment the event was raised."""
+        # We don't set a component attribute here, because some events may
+        # not be related to a component (timer/trigger?)
+
+        def __init__(self, *args, **kwargs):
+            Attrib.__init__(self, *args, **kwargs)
+            self.time = time.time()
+
+    class SelectEvent(AbstractEvent):
+        component = None
+        item = None
+
+    class ToggleEvent(AbstractEvent):
+        component = None
+
+    class CloseEvent(AbstractEvent):
+        component = None # Probably a Window
+
+    ####################
+    # System events
+
+    class SystemEvent(AbstractEvent):
+        pass
+
+    class ShutdownEvent(SystemEvent):
+        pass
+
+    ####################
+    # MVC events
+
+    class ModelEvent(AbstractEvent):
+        names = []
+
+
+    ####################
+    # Mouse events
+
+    class MouseEvent(AbstractEvent):
+        device = Devices.Mouse()
+        component = None
+
+    class LeftClickEvent(MouseEvent):
+        pass
+
+    class RightClickEvent(MouseEvent):
+        pass
+
+    class MouseSelectEvent(MouseEvent, SelectEvent):
+        pass
+
+
+    ####################
+    # Keyboard events
+
+    class KeyboardEvent(AbstractEvent):
+        device = Devices.Keyboard()
+        component = None
+        text = None
+
+    class TextInputEvent(KeyboardEvent):
+        device = Devices.Keyboard()
+        component = None
+
+    class PressEnterEvent(KeyboardEvent):
+        pass
 
 #def link(source, event, handler,  weak=0, loop=0):
 def link(*args, **kwds):
-    """link(source, event='default', handler, weak=0, loop=0)
+    """link(source, event=None, handler, weak=0, loop=0)
 
     Creates a link in the Manygui event system, between the source (any
     object) and the handler (any callable, or a (obj,func) pair, where
@@ -98,7 +174,13 @@ def link(*args, **kwds):
     """
     assert len(args) < 4, 'link takes only three positional arguments'
     if len(args) == 2:
-        source, handler = args; event = 'default'
+        source, handler = args;
+        if source is any:
+            event = None
+        elif hasattr(source, 'DefaultEvent'):
+            event = source.DefaultEvent
+        else:
+            event = any
     else:
         source, event, handler = args
     weak = kwds.get('weak', 0)
@@ -115,7 +197,7 @@ def link(*args, **kwds):
 
 #def unlink(source, event, handler):
 def unlink(*args, **kwds):
-    """unlink(source, event='default', handler)
+    """unlink(source, event=None, handler)
 
     Undoes a call to link with the same positional arguments. If handler
     has been registered with either source or event as any, that parameter
@@ -135,50 +217,58 @@ def unlink(*args, **kwds):
             This behaviour (unlinking handlers registered with the any
             value) may change in future releases.
 
-    Default Events: When used without the event argument, both link and
-    send use an event type called default. Most event-generating
-    components have a default event type, such as click for Buttons. The
-    fact that this event type is default for Button means that when a
-    Button generates a click event it will also generate a default event.
-    So, if you listen to both click events and default events from a
-    Button, your event handler will always be called twice.
+    If `event` is not given (or None), it will default to the default event
+    of the source.
     """
     assert len(args) < 4, 'link takes only three positional arguments'
     if len(args) == 2:
-        source, handler = args; event = 'default'
+        source, handler = args;
+        if source is any:
+            event = None
+        else:
+            event = source.DefaultEvent
     else:
         source, event, handler = args
     h = ref(handler, weak=0)
-    for lst in lookup(source, event):
-        try:
-            lst.remove(h)
-        except (KeyError, ValueError): pass
+    try:
+        registry[source][event].remove(h)
+    except (KeyError, ValueError): pass
 
 def lookup(source, event):
+    if not isinstance(event, type):
+        event = event.__class__
     source = ref(source, weak=0)
-    lists = []
-    sources = [source]
-    if source() is not any: sources.append(ref(any, weak=0))
-    events = [event]
-    if event is not any: events.append(any)
-    for s in sources:
-        for e in events:
-            try:
-                h = registry[s][e]
-                lists.append(registry[s][e])
-            except KeyError: pass
-    return lists
+    if event is None:
+        event = source.DefaultEvent
 
-def send(source, event='default', loop=0, **kw):
-    """send(source, event='default', loop=0, **kwds)
+    # Filter by source
+    events = {}
+    if source in registry:
+        events.update(registry[source])
+    if any in registry:
+        for event, lst in registry[any].items():
+            if event in events:
+                events[event].extend(lst)
+            else:
+                events.update({event: lst})
+
+    # Filter by event
+    lst = []
+    if event in events:
+        lst += events[event]
+    if any in events:
+        lst += events[any]
+    return lst
+
+def send(source, event=None, loop=0):
+    """send(source, event=None, loop=0)
 
     When this is called, any handlers (callables) linked to the source,
     but which will not cause a send-loop (unless loop is true) will be
-    called with all the keyword arguments provided (except loop), in the
-    order in which they were linked. In addition to the supplied keyword
-    arguments, the event framework will add source, event, and the time
-    (as measured by the standard Python function time.time) when send was
-    called, supplied with the time argument.
+    called in the order in which they were linked.
+
+    If `event` is not given (or None), it will default to the default event
+    of the source.
 
     Note that source, and event, are strictly positional parameters, while
     the others (loop, and any additional arguments the user might add)
@@ -206,34 +296,27 @@ def send(source, event='default', loop=0, **kw):
 
     .. important::
 
-       Due to the current semantics of the any value, using it in
-       send may not be a good idea, since the result might not be what you
-       expect. For instance, calling send(any, any) will only activate event
-       handlers which have been linked to the value any as both source and
-       event, not to "event handlers with any source and any event". This may
-       change in future releases. The current behaviour of send with any is
-       consistent with unlink.
+        You can't use :class:`manygui.any` here.
     """
-    args = {'source': source, 'event': event}
-    args.update(kw)
+    assert source is not any
+    assert event is not any
     source_stack.append(source)
+    if event is None:
+        event = source.DefaultEvent()
     try:
         results = []
-        args.setdefault('time', time.time())
-        for handlers in lookup(source, event):
+        for r in lookup(source, event):
             live_handlers = []
-            for r in handlers:
-                if not r.is_dead():
-                    live_handlers.append(r)
-                    obj = r.obj
-                    if obj is not None:
-                        obj = obj()
-                        if not loop and not r.loop \
-                           and obj in source_stack: continue
-                    handler = r()
-                    result = handler(**args)
-                    if result is not None: results.append(result)
-            handlers[:] = live_handlers
+            if not hasattr(r, 'is_dead') or not r.is_dead():
+                live_handlers.append(r)
+                obj = r.obj
+                if obj is not None:
+                    obj = obj()
+                    if not loop and not r.loop \
+                       and obj in source_stack: continue
+                handler = r()
+                result = handler(source=source, event=event)
+                if result is not None: results.append(result)
         if results: return results
     finally:
         source_stack.pop()
@@ -241,10 +324,14 @@ def send(source, event='default', loop=0, **kw):
 class Sender:
     def __init__(self, event):
         self.event = event
-    def __call__(self, source, event, **kwds):
-        send(source, self.event, **kwds)
+    def __call__(self, source, event):
+        if self.event is None:
+            event = source.DefaultEvent
+        else:
+            event = self.event
+        send(source, event())
         
-def sender(event='default'):
+def sender(event=None):
     return Sender(event)
 
 def unlinkSource(source):

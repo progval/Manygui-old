@@ -9,7 +9,7 @@ __all__ = ['application', 'Application',
            'LayoutManager', 'Placer', 'CircleManager', 'SimpleGridManager',
            'GridManager', 'Canvas',
            'send', 'link', 'unlink', 'any', 'unlinkSource', 'unlinkHandler',
-           'unlinkMethods', 'Frame', 'backend'
+           'unlinkMethods', 'Frame', 'backend', 'events'
            ] # FIXME: Add stuff from Colors and Fonts
 
 # Try to get the environment variables MANYGUI_WISHLIST (overrides

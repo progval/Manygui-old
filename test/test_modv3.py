@@ -15,7 +15,7 @@ def printit1(**ignore_kwds):
 def printit2(**ignore_kwds):
     log('printit2:',newbtn.on,ignore_kwds)
 
-def say_hello(**kw):
+def say_hello(source, event):
     log("Hello, world!")
     global newbtn
     if newbtn is None:

@@ -1,5 +1,5 @@
 from manygui.Mixins import Attrib
-from .Events import link, unlink, send
+from .Events import link, unlink, send, events
 from collections import UserList
 from collections import UserString
 
@@ -13,19 +13,20 @@ class Assignee:
         refresh = getattr(object, 'refresh', None)
         if refresh is not None:
             self.names.append(name)
-            link(self, refresh)
+            link(self, events.ModelEvent, refresh)
 
     def removed(self, object, name):
         refresh = getattr(object, 'refresh', None)
         if refresh is not None:
-            unlink(self, refresh)
+            unlink(self, events.ModelEvent, refresh)
             self.names.remove(name)
 
     def send(self, **kw):
-        send(self, names=self.names, **kw)
+        send(self, events.ModelEvent(names=self.names))
 
 
 class Model(Attrib, Assignee):
+    DefaultEvent = events.ModelEvent
 
     def refresh(self, **kwds):
         self.send(**kwds)

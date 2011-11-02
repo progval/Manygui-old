@@ -128,7 +128,8 @@ class QPaintableWidget(QWidget):
 
     def mousePressEvent(self, event):
         if DEBUG: print('in mousePressEvent of: ', self)
-        send(self._container, 'click', x=event.x(), y=event.y())
+        send(self._container, events.LeftClickEvent(self._container,
+                x=event.x(), y=event.y()))
 
 class Canvas(ComponentMixin, AbstractCanvas):
     _qt_class  = QPaintableWidget
@@ -215,7 +216,7 @@ class ListBox(ComponentMixin, AbstractListBox):
 
     def _backend_selection(self):
         if self._qt_comp:
-            return int(self._qt_comp.currentItem())
+            return self._qt_comp.currentItem().text()
 
     def _ensure_items(self):
         if self._qt_comp is not None:
@@ -240,7 +241,7 @@ class ListBox(ComponentMixin, AbstractListBox):
         if DEBUG: print('in _qt_item_select_handler of: ', self._qt_comp)
         self._selection = self._backend_selection()
         #send(self,'select',index=self._qt_comp.index(item),text=str(item.text()))
-        send(self,'select')
+        send(self, events.SelectEvent(component=self, item=self._get_selection()))
 
 
 ################################################################
@@ -268,7 +269,7 @@ class Button(ButtonBase, AbstractButton):
 
     def _qt_click_handler(self):
         if DEBUG: print('in _qt_btn_clicked of: ', self._qt_comp)
-        send(self,'click')
+        send(self)
 
 class ToggleButtonBase(ButtonBase):
 
@@ -287,7 +288,7 @@ class CheckBox(ToggleButtonBase, AbstractCheckBox):
         if self.on == val:
             return
         self.modify(on=val)
-        send(self, 'click')
+        send(self)
 
 class RadioButton(ToggleButtonBase, AbstractRadioButton):
     _qt_class = QRadioButton
@@ -299,7 +300,7 @@ class RadioButton(ToggleButtonBase, AbstractRadioButton):
             return
         if self.group is not None:
             self.group.modify(value=self.value)
-        send(self, 'click')
+        send(self)
 
 ################################################################
 
@@ -340,7 +341,7 @@ class TextBase(ComponentMixin, AbstractTextField):
         self._text = self._backend_text()
         #self.modify(text=self._backend_text())
         if int(event.key()) == 0x1004: #Qt Return Key Code
-            send(self, 'enterkey')
+            send(self, events.PressEnterEvent(self))
         return 1
 
     def _qt_lost_focus_handler(self, event):

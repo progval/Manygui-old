@@ -1,6 +1,25 @@
 """
 >>> from manygui.Events import *
+>>> class FooEvent(events.AbstractEvent):
+...     pass
+...
+>>> class FooEvent2(events.AbstractEvent):
+...     pass
+...
+>>> class FooEvent3(events.AbstractEvent):
+...     pass
+...
+>>> class FooEvent4(events.AbstractEvent):
+...     pass
+...
+>>> class SpamEvent(events.AbstractEvent):
+...     pass
+...
+>>> class EggEvent(SpamEvent):
+...     pass
+...
 >>> class Test:
+...     DefaultEvent = EggEvent
 ...     def handle(self, **kw):
 ...         print('Handled!')
 ...
@@ -9,23 +28,21 @@ Basic functionality:
 
 >>> s = Test()
 >>> q = Test()
->>> link(s, 'default', q.handle)
->>> send(s, 'default')
-Handled!
->>> unlink(s, 'default', q.handle)
->>> send(s, 'default')
-
 >>> link(s, q.handle)
 >>> send(s)
 Handled!
 >>> unlink(s, q.handle)
 >>> send(s)
 
+>>> link(s, SpamEvent, q.handle)
+>>> send(s)
+Handled!
+>>> unlink(s, q.handle)
+>>> send(s)
+
 #>>> t = Test()
-#>>> evt1 = Event()
-#>>> evt1.type = 'something'
-#>>> link(event='something', t.handle, weak=1)
-#>>> send(event='something')
+#>>> link(event=FooEvent, t.handle, weak=1)
+#>>> send(event=FooEvent())
 Handled!
 
 [More comparison demonstrations?]
@@ -45,9 +62,9 @@ Strong handlers:
 
 >>> s = Test()
 >>> t = Test()
->>> link(s, 'strong-handlers', t.handle)
+>>> link(s, FooEvent, t.handle)
 >>> del t
->>> send(s, 'strong-handlers')
+>>> send(s, FooEvent())
 Handled!
 
 Weak sources:
@@ -79,8 +96,8 @@ Wrapper functions:
 ...
 >>> s = Test()
 >>> t = Test()
->>> link(s, 'wrapper-event', (t, wrapper_test))
->>> send(s, 'wrapper-event')
+>>> link(s, FooEvent, (t, wrapper_test))
+>>> send(s, FooEvent())
 <wrapper>
 Handled!
 </wrapper>
@@ -94,10 +111,10 @@ Return values from event handlers:
 ...
 >>> def handler3(**kw): return 3
 ...
->>> link(s, 'return-values', handler1)
->>> link(s, 'return-values', handler2)
->>> link(s, 'return-values', handler3)
->>> send(s, 'return-values')
+>>> link(s, FooEvent2, handler1)
+>>> link(s, FooEvent2, handler2)
+>>> link(s, FooEvent2, handler3)
+>>> send(s, FooEvent2())
 [1, 2, 3]
 
 Globbing:
@@ -107,13 +124,13 @@ Globbing:
 ...
 >>> link(any, any, globbed_handler)
 >>> s = Test()
->>> send(s, 'something')
+>>> send(s, FooEvent3())
 Here I am!
 >>> unlink(any, any, globbed_handler)
 >>> link(any, globbed_handler)
 >>> send(s)
 Here I am!
->>> send(s, 'something')
+>>> send(s, FooEvent3())
 >>> unlink(any, globbed_handler)
 
 [Other API functions]
@@ -134,11 +151,11 @@ Caught something
 
 Relaying with sender wrapper:
 
->>> src = 'foo'
->>> link(src, sender('relayed_event'))
+>>> src = Test()
+>>> link(src, sender(FooEvent4))
 >>> def relayed_event_handler(**kwds):
 ...     print('Caught relayed_event')
->>> link(any, 'relayed_event', relayed_event_handler)
+>>> link(any, FooEvent4, relayed_event_handler)
 >>> send(src)
 Caught relayed_event
 

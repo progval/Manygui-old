@@ -1,7 +1,6 @@
 "Mixins: mix-in classes for the manygui package"
 
 from .Exceptions import SetAttributeError, GetAttributeError, UnimplementedMethod, InternalError
-from .Events import link, send
 import collections
 #import weakref
 weakref = None
@@ -326,10 +325,12 @@ class DefaultEventMixin:
 
     def __init__(self):
         if hasattr(self, '_default_event'):
+            from .Events import link
             link(self, self._default_event, self._default_event_handler,
                  weak=0, loop=1)
 
     def _default_event_handler(self, **kw):
+        from .Events import send
         kw = kw.copy()
         del kw['event']
         del kw['source']

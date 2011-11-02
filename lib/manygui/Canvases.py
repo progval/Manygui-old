@@ -3,6 +3,7 @@ from .Components import AbstractComponent
 from .Colors import *
 from .Fonts import *
 from . import Defaults
+from .Events import events
 
 figureLine = 1
 figureArc = 2
@@ -16,6 +17,8 @@ class AbstractCanvas(AbstractComponent, Defaults.Canvas):
     """This is the base class for a drawing canvas.  The backend
     canvases just inherit from this one, and implement the various
     drawing methods."""
+
+    DefaultEvent = events.LeftClickEvent
 
     def __init__(self, *args, **kwds):
         '''Initialize the canvas, and set default drawing parameters. 

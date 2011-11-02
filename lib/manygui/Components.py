@@ -168,6 +168,9 @@ class AbstractComponent(Attrib, DefaultEventMixin):
             self.geometry = (self._x + dx, self._y + dy,
                              self._width + dw, self._height + dh)
 
+    def _get_DefaultEvent(self):
+        return self._DefaultEvent
+
     # backend api
 
     def _is_created(self):

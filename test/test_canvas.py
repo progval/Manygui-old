@@ -11,12 +11,12 @@ app.add(win)
 cvs = Canvas(size=win.size)
 win.add(cvs)
 
-def click(x, y, **kw):
-    log('[Mouse clicked at (%i, %i)]' % (x, y))
-    if 30 <= x <= 100 and 30 <= y <= 100:
+def click(source, event):
+    log('[Mouse clicked at (%i, %i)]' % (event.x, event.y))
+    if 30 <= event.x <= 100 and 30 <= event.y <= 100:
         log('Yay! You clicked the round rect!')
 
-link(cvs, 'click', click)
+link(cvs, events.LeftClickEvent, click)
 
 # Taken from http://piddle.sourceforge.net/sample1.html
 

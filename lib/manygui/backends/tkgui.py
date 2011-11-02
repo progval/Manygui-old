@@ -166,7 +166,7 @@ class Canvas(ComponentMixin, AbstractCanvas):
             self._tk_comp.bind('<ButtonRelease-1>', self._tk_clicked)
 
     def _tk_clicked(self, event):
-        send(self, 'click', x=event.x, y=event.y)
+        send(self, events.LeftClickEvent(x=event.x, y=event.y))
 
 def _convert_color(c):
     if c is None or c is Colors.transparent: return ''
@@ -239,7 +239,7 @@ class ListBox(ComponentMixin, AbstractListBox):
             self._tk_comp.bind('<KeyRelease-space>', self._tk_clicked)
 
     def _tk_clicked(self, event):
-        send(self, 'select')
+        send(self)
 
 ################################################################
 
@@ -251,7 +251,7 @@ class Button(ComponentMixin, AbstractButton):
             self._tk_comp.config(command=self._tk_clicked)
 
     def _tk_clicked(self):
-        send(self, 'click')
+        send(self)
 
     def _ensure_text(self):
         if self._tk_comp:
@@ -282,7 +282,7 @@ class CheckBox(ToggleButtonMixin, AbstractCheckBox):
 
     def _tk_clicked(self):
         self.modify(on=not self.on)
-        send(self, 'click')
+        send(self)
 
 class RadioButton(ToggleButtonMixin, AbstractRadioButton):
     _tk_class = Radiobutton
@@ -290,7 +290,7 @@ class RadioButton(ToggleButtonMixin, AbstractRadioButton):
     def _tk_clicked(self):
         if self.group is not None:
             self.group.modify(value=self.value)
-        send(self, 'click')
+        send(self)
 
     def _ensure_created(self):
         result = ToggleButtonMixin._ensure_created(self)
@@ -414,7 +414,7 @@ class TextField(ComponentMixin, AbstractTextField, DisabledTextBindings):
         pass
 
     def _send_action(self, dummy): # FIXME: dummy...
-        send(self, 'enterkey')
+        send(self)
 
     def _ensure_events(self):
         if self._tk_comp:
