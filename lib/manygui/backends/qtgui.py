@@ -212,6 +212,12 @@ class ListBox(ComponentMixin, AbstractListBox):
 
     def _ensure_created(self):
         result = ComponentMixin._ensure_created(self)
+
+        # Fix layout (item will be removed later by self._ensure_items).
+        # Don't ask me why it fixes it, the real question is
+        # "Why is that bad rendered if we don't add an item first?"
+        self._qt_comp.addItem('foo')
+
         return result
 
     def _backend_selection(self):
