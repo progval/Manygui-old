@@ -224,7 +224,7 @@ class ListBox(ComponentMixin, AbstractListBox):
             # condition is always false.
             self._qt_comp.clear()
             for item in self._items:
-                self._qt_comp.insertItem(-1, item)
+                self._qt_comp.addItem(item)
 
     def _ensure_selection(self):
         if self._qt_comp:
