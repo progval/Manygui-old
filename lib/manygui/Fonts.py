@@ -33,3 +33,7 @@ class Font:
 
     def __setattr__(self, name, value):
         raise TypeError("manygui.Font has read-only attributes")
+
+class fonts:
+    """Namespace for all fonts."""
+    pass

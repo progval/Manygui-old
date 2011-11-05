@@ -15,7 +15,9 @@ class BaseDevice:
     pass
 
 class Mouse(BaseDevice):
-    pass
+    def __repr__(self):
+        return 'manygui.Devices.Mouse()'
 
 class Keyboard(BaseDevice):
-    pass
+    def __repr__(self):
+        return 'manygui.Devices.Keyboard()'

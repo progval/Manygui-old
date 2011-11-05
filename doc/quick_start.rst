@@ -246,29 +246,21 @@ which you can choose to react to. (We also call this "sending an
 event".)
 
 For instance, when the user clicks a button, an event of the type
-'click' is sent automatically, with the button as the source. To
-respond to it, you just have to write a function (or method)
-containing the action to be performed (called the "event handler")
-and link it to the button:
+:class:`manygui.events.LeftClickEvent` is sent automatically, with
+the button as the source. To respond to it, you just have to write
+a function (or method) containing the action to be performed
+(called the "event handler") and link it to the button:
 
 .. code-block:: python
 
       def handler(**kw):
           txt.text = sentence()
 
-      link(btn, 'click', handler)
+      link(btn, events.LeftClickEvent, handler)
 
 Here we have explicitly said that the handler should be called when
-an event of type 'click' occurs. This is the default event type of
-buttons, which means that we could also have used the type called
-'default', like this:
-
-.. code-block:: python
-
-      link(btn, 'default', handler)
-
-The nice thing about this is that 'default' always can be omitted,
-so we just write:
+an event of type LeftClickEvent occurs. This is the default event type of
+buttons, which means that we could also have omitted it:
 
 .. code-block:: python
 
@@ -293,7 +285,7 @@ Manygui programs. To aid you in your exploration here is some more
 information:
 
 Common attributes::
-   
+
         x
                 x-coordinate of upper left corner
         y
@@ -316,7 +308,7 @@ Common attributes::
                 text associated with the component
 
 
-Some component types 
+Some component types
 --------------------
 
 Button
@@ -347,6 +339,7 @@ a simple one-line text label
 
 ListBox
 ^^^^^^^
+
 selectable list of strings
 
 lbx.items
@@ -380,6 +373,7 @@ txt.selection
 
 TextField
 ^^^^^^^^^
+
 single-line text component
 
 txt.selection
@@ -431,7 +425,7 @@ The Program
 
    def handler(**kw):
         txt.text = sentence()
-   link(btn, 'click', handler)
+   link(btn, events.LeftClickEvent, handler)
 
    app = Application()
    app.add(win)

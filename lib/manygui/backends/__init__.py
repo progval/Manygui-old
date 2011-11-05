@@ -6,7 +6,8 @@ from manygui.Applications import AbstractApplication
 from manygui.Windows import AbstractWindow
 from manygui.Buttons import AbstractButton
 from manygui.Canvases import AbstractCanvas
-from manygui import Colors
+from manygui.Colors import Color, HexColor, colors
+from manygui.Fonts import Font, fonts
 from manygui.Labels import AbstractLabel
 from manygui.CheckBoxes import AbstractCheckBox
 from manygui.RadioButtons import AbstractRadioButton

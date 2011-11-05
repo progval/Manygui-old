@@ -39,6 +39,7 @@ void = Internal
 
 class events:
     """Namespace for all event types."""
+
     class AbstractEvent(Attrib):
         """Base event."""
         device = None
@@ -53,28 +54,34 @@ class events:
             self.time = time.time()
 
     class SelectEvent(AbstractEvent):
+        """Item selected, either by mouse or keyboard."""
         component = None
         item = None
 
     class ToggleEvent(AbstractEvent):
+        """Toggle a checkbox or a radio button."""
         component = None
 
     class CloseEvent(AbstractEvent):
+        """Closed window."""
         component = None # Probably a Window
 
     ####################
     # System events
 
     class SystemEvent(AbstractEvent):
+        """Abstract event for system events."""
         pass
 
     class ShutdownEvent(SystemEvent):
+        """Application shutdown."""
         pass
 
     ####################
     # MVC events
 
     class ModelEvent(AbstractEvent):
+        """Base event for Model framework events."""
         names = []
 
 
@@ -82,22 +89,28 @@ class events:
     # Mouse events
 
     class MouseEvent(AbstractEvent):
+        """Abstract event for all events triggered by the mouse."""
         device = Devices.Mouse()
         component = None
 
     class LeftClickEvent(MouseEvent):
+        """Mouse left click."""
         pass
 
     class RightClickEvent(MouseEvent):
+        """Mouse right click."""
         pass
 
     class PressEvent(MouseEvent):
+        """Button press."""
         pass
 
     class ReleaseEvent(MouseEvent):
+        """Button release."""
         pass
 
     class MouseSelectEvent(MouseEvent, SelectEvent):
+        """Select an item with the mouse."""
         pass
 
 
@@ -105,15 +118,18 @@ class events:
     # Keyboard events
 
     class KeyboardEvent(AbstractEvent):
+        """Abstract event for all events triggered by the keyboard."""
         device = Devices.Keyboard()
         component = None
         text = None
 
     class TextInputEvent(KeyboardEvent):
+        """User pressed a character key."""
         device = Devices.Keyboard()
         component = None
 
     class PressEnterEvent(KeyboardEvent):
+        """User pressed Enter (aka Return)."""
         pass
 
 #def link(source, event, handler, loop=0):

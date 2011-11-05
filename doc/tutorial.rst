@@ -95,14 +95,14 @@ Python distributions from version 2.0. To install the Manygui package
 in the default location, simply run the setup script with the install
 command::
 
-      foo:~$ python setup.py install
+      foo:~$ python3 setup.py install
 
 This will install Manygui in your standard Python directory structure.
 If you don't have access to this directory (e.g. because Python was
 installed by a sysadmin, and you don't have root access) you can
 install it somewhere else with the --prefix option::
 
-      foo:~$ python setup.py install --prefix=${HOME}/python
+      foo:~$ python3 setup.py install --prefix=${HOME}/python
 
 Doing it Manually
 -----------------
@@ -150,6 +150,10 @@ Manygui currently supports the following packages::
       Bethon     (beosgui)   http://www.bebits.com/app/1564
       Curses     (cursesgui) -- used when no GUI package is available
       Plain text (textgui)   -- used if curses is not available
+
+.. note::
+
+        Some of this packages are not available for Python 3.
 
 Add gui to name returned by the backend function to get the full name
 of the backend module (in the manygui.backends package). For instance,
@@ -453,12 +457,13 @@ of applying the built-in Python function str to each object.
 
 The currently selected item can be queried or set through the
 selection property (an integer index, counting from zero). Also, when
-an item is selected, a select event is generated, which is the default
-event type for a ListBox. This means that you can either do
+an item is selected, a :class:`manygui.events.SelectEvent` is generated,
+which is the default event type for a ListBox. This means that you can
+either do
 
 .. code-block:: python
 
-      link(lbx, 'select', handler)
+      link(lbx, events.SelectEvent, handler)
 
 or
 
@@ -467,8 +472,7 @@ or
       link(lbx, handler)
 
 with the same result. (This is similar to the click event, which is
-default for Buttons; for more information, see the API Reference
-below.)
+default for Buttons; for more information, see the API Reference)
 
 TextField and TextArea
 ----------------------

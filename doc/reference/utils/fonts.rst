@@ -1,0 +1,6 @@
+*****
+Fonts
+*****
+
+.. autoclass:: manygui.Font
+

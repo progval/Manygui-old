@@ -10,4 +10,5 @@ Global functions and design
    mvc.rst
    custom_components.rst
    classes.rst
+   events.rst
 
