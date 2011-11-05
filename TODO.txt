@@ -13,9 +13,6 @@ Release 0.3: Less API change, focus on robustness
 Remaining objectives for version 0.1:
 -------------------------------------
 
-* Fix remaining bugs and make sure the tests work in all
-  backends
-
 * Make sure all backends convert attribute values so they
   are acceptable to the backend widgets
 
@@ -29,10 +26,6 @@ Remaining objectives for version 0.1:
 
 * Make passive attributes (like text selection) active
   through basic event handling (Move to 0.2?)
-
-* Make send(foo) send out the default event type (e.g. 'click')
-  in addition to 'default', just as the symmetric case (e.g. send(btn,
-  'click') will send a 'default' event).
 
 Objectives for version 0.2:
 ---------------------------
