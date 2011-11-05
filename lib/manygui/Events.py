@@ -26,9 +26,8 @@ __all__ = '''
 
 
 import time
-from .References import ref, mapping
 import collections
-registry = mapping()
+registry = {}
 from .Mixins import Attrib
 from .Utils import IdentityStack
 from . import Devices
@@ -117,9 +116,9 @@ class events:
     class PressEnterEvent(KeyboardEvent):
         pass
 
-#def link(source, event, handler,  weak=0, loop=0):
+#def link(source, event, handler, loop=0):
 def link(*args, **kwds):
-    """link(source, event=None, handler, weak=0, loop=0)
+    """link(source, event=None, handler, loop=0)
 
     Creates a link in the Manygui event system, between the source (any
     object) and the handler (any callable, or a (obj,func) pair, where
@@ -189,17 +188,22 @@ def link(*args, **kwds):
             event = any
     else:
         source, event, handler = args
-    weak = kwds.get('weak', 0)
+    if event is None:
+        assert hasattr(source, 'DefaultEvent'), 'The source object has no ' +\
+                'default event set. You must give the event to link.'
+        # Note : we could use any in that case (that's why the previous
+        # implementation did). But it would be too confusing to users to
+        # have two different behavior depending on the implementation of
+        # the components.
+        event = source.DefaultEvent
     loop = kwds.get('loop', 0)
-    s = ref(source, weak)
-    h = ref(handler, weak)
-    h.loop = loop
-    if s not in registry:
-        registry[s] = {}
-    if event not in registry[s]:
-        registry[s][event] = []
-    if not h in registry[s][event]:
-        registry[s][event].append(h)
+    handler.__dict__['loop'] = loop
+    if source not in registry:
+        registry[source] = {}
+    if event not in registry[source]:
+        registry[source][event] = []
+    if not handler in registry[source][event]:
+        registry[source][event].append(handler)
 
 #def unlink(source, event, handler):
 def unlink(*args, **kwds):
@@ -235,15 +239,13 @@ def unlink(*args, **kwds):
             event = source.DefaultEvent
     else:
         source, event, handler = args
-    h = ref(handler, weak=0)
     try:
-        registry[source][event].remove(h)
+        registry[source][event].remove(handler)
     except (KeyError, ValueError): pass
 
 def lookup(source, event):
     if not isinstance(event, type):
         event = event.__class__
-    source = ref(source, weak=0)
     if event is None:
         event = source.DefaultEvent
 
@@ -260,10 +262,9 @@ def lookup(source, event):
 
     # Filter by event
     lst = []
-    if event in events:
-        lst += events[event]
-    if any in events:
-        lst += events[any]
+    for e in events:
+        if issubclass(event, e) or e is any:
+            lst += events[e]
     return lst
 
 def send(source, event=None, loop=0):
@@ -311,18 +312,12 @@ def send(source, event=None, loop=0):
         event = source.DefaultEvent()
     try:
         results = []
-        for r in lookup(source, event):
-            live_handlers = []
-            if not hasattr(r, 'is_dead') or not r.is_dead():
-                live_handlers.append(r)
-                obj = r.obj
-                if obj is not None:
-                    obj = obj()
-                    if not loop and not r.loop \
-                       and obj in source_stack: continue
-                handler = r()
-                result = handler(source=source, event=event)
-                if result is not None: results.append(result)
+        for handler in lookup(source, event):
+            if handler is not None:
+                if not loop and not handler.loop \
+                   and handler in source_stack: continue
+            result = handler(source=source, event=event)
+            if result is not None: results.append(result)
         if results: return results
     finally:
         source_stack.pop()
@@ -346,10 +341,9 @@ def unlinkSource(source):
 
 def unlinkHandler(handler):
     'Unlink a handler completely from the event framework.'
-    h = ref(handler, weak=0)
     for s in list(registry.keys()):
         for e in list(registry[s].keys()):
-            try: retistry[s][e].remove(h)
+            try: retistry[s][e].remove(handler)
             except ValueError: pass
 
 def unlinkMethods(obj):

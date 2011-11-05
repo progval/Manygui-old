@@ -1,5 +1,6 @@
 """
 >>> from manygui.Events import *
+>>> from manygui.Events import registry
 >>> class FooEvent(events.AbstractEvent):
 ...     pass
 ...
@@ -37,7 +38,7 @@ Handled!
 >>> link(s, SpamEvent, q.handle)
 >>> send(s)
 Handled!
->>> unlink(s, q.handle)
+>>> unlink(s, SpamEvent, q.handle)
 >>> send(s)
 
 #>>> t = Test()
@@ -47,17 +48,6 @@ Handled!
 
 [More comparison demonstrations?]
 
-Weak handlers:
-
->>> s = Test()
->>> t = Test()
->>> link(s, t.handle, weak=1)
->>> send(s)
-Handled!
->>> del t
->>> send(s)
->>>
-
 Strong handlers:
 
 >>> s = Test()
@@ -66,10 +56,6 @@ Strong handlers:
 >>> del t
 >>> send(s, FooEvent())
 Handled!
-
-Weak sources:
-
-[Untestable...?]
 
 Loop blocking:
 
@@ -86,21 +72,6 @@ Handled!
 >>> send(t)
 >>> send(t, loop=1)
 Handled!
-
-Wrapper functions:
-
->>> def wrapper_test(obj, **kw):
-...     print('<wrapper>')
-...     obj.handle()
-...     print('</wrapper>')
-...
->>> s = Test()
->>> t = Test()
->>> link(s, FooEvent, (t, wrapper_test))
->>> send(s, FooEvent())
-<wrapper>
-Handled!
-</wrapper>
 
 Return values from event handlers:
 
@@ -127,11 +98,6 @@ Globbing:
 >>> send(s, FooEvent3())
 Here I am!
 >>> unlink(any, any, globbed_handler)
->>> link(any, globbed_handler)
->>> send(s)
-Here I am!
->>> send(s, FooEvent3())
->>> unlink(any, globbed_handler)
 
 [Other API functions]
 
@@ -141,7 +107,7 @@ Exception handling:
 ...     print(1/0)
 ...
 >>> s = Test()
->>> link(s, faulty_handler)
+>>> link(s, any, faulty_handler)
 >>> try:
 ...     send(s)
 ... except:
@@ -156,7 +122,7 @@ Relaying with sender wrapper:
 >>> def relayed_event_handler(**kwds):
 ...     print('Caught relayed_event')
 >>> link(any, FooEvent4, relayed_event_handler)
->>> send(src)
+>>> send(src, FooEvent4())
 Caught relayed_event
 
 """
