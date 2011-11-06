@@ -298,7 +298,7 @@ class CheckBox(ToggleButtonMixin, AbstractCheckBox):
 class RadioButton(ToggleButtonMixin, AbstractRadioButton):
     _tk_class = Radiobutton
 
-    def _tk_clicked(self, event):
+    def _tk_toggle(self):
         if self.group is not None:
             self.group.modify(value=self.value)
         send(self)

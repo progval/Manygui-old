@@ -222,7 +222,7 @@ class ListBox(ComponentMixin, AbstractListBox):
 
     def _backend_selection(self):
         if self._qt_comp:
-            return self._qt_comp.currentItem().text()
+            return self._items.index(self._qt_comp.currentItem())
 
     def _ensure_items(self):
         if self._qt_comp is not None:
@@ -239,11 +239,10 @@ class ListBox(ComponentMixin, AbstractListBox):
     def _ensure_events(self):
         if DEBUG: print('in _ensure_events of: ', self)
         if self._qt_comp and not self._connected:
-            qApp.connect(self._qt_comp, SIGNAL('highlighted(int)'),\
-                         self._qt_item_select_handler)
+            self._qt_comp.itemSelectionChanged.connect(self._qt_item_select_handler)
             self._connected = 1
 
-    def _qt_item_select_handler(self, index):
+    def _qt_item_select_handler(self):
         if DEBUG: print('in _qt_item_select_handler of: ', self._qt_comp)
         self._selection = self._backend_selection()
         #send(self,'select',index=self._qt_comp.index(item),text=str(item.text()))
@@ -301,28 +300,33 @@ class ToggleButtonBase(ButtonBase):
             if not self._qt_comp.isChecked() == self._on:
                 self._qt_comp.setChecked(self._on)
 
+class CheckBox(ToggleButtonBase, AbstractCheckBox):
+    _qt_class = QCheckBox
+
     def _qt_toggle_handler(self):
         if DEBUG: print('in _qt_click_handler of: ', self._qt_comp)
         val = self._qt_comp.isChecked()
         if self.on == val:
             return
         self.modify(on=val)
-        send(self)
-
-class CheckBox(ToggleButtonBase, AbstractCheckBox):
-    _qt_class = QCheckBox
+        send(self, events.ToggleEvent())
 
 class RadioButton(ToggleButtonBase, AbstractRadioButton):
     _qt_class = QRadioButton
 
-    def _qt_click_handler(self):
+    def _ensure_state(self):
+        ToggleButtonBase._ensure_state(self)
+        if self._qt_comp:
+            self._qt_comp.setAutoExclusive(False)
+
+    def _qt_toggle_handler(self):
         if DEBUG: print('in _qt_click_handler of: ', self._qt_comp)
         val = self._qt_comp.isChecked()
-        if self._on == val:
+        if self.on == val:
             return
         if self.group is not None:
             self.group.modify(value=self.value)
-        send(self)
+        send(self, events.ToggleEvent())
 
 ################################################################
 
