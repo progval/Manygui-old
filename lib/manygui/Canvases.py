@@ -25,8 +25,8 @@ class AbstractCanvas(AbstractComponent, Defaults.Canvas):
         Derived classes should be sure to call this method.'''
         AbstractComponent.__init__(self, *args, **kwds)
         # defaults used when drawing
-        self.defaultLineColor = black
-        self.defaultFillColor = transparent
+        self.defaultLineColor = colors.black
+        self.defaultFillColor = colors.transparent
         self.defaultLineWidth = 1
         self.defaultFont = Font()
 
@@ -107,10 +107,10 @@ class AbstractCanvas(AbstractComponent, Defaults.Canvas):
 		
         # Fill...
         self.drawPolygon(pointlist+[center]+[pointlist[0]],
-		         transparent, 0, fillColor)
+		         colors.transparent, 0, fillColor)
 
         # Outline...
-        self.drawPolygon(pointlist, edgeColor, edgeWidth, transparent)
+        self.drawPolygon(pointlist, edgeColor, edgeWidth, colors.transparent)
 
     def drawPolygon(self, pointlist, 
                     edgeColor=None, edgeWidth=None, fillColor=None, closed=1):
