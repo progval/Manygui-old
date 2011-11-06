@@ -35,6 +35,9 @@ class Model(Attrib, Assignee):
         Assignee.__init__(self)
         Attrib.__init__(self, **kw)
 
+    def __hash__(self):
+        return object.__hash__(self)
+
 
 class BooleanModel(Model):
 
