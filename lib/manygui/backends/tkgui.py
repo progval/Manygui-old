@@ -166,10 +166,10 @@ class Canvas(ComponentMixin, AbstractCanvas):
             self._tk_comp.bind('<ButtonRelease-1>', self._tk_clicked)
 
     def _tk_clicked(self, event):
-        send(self, 'click', x=event.x, y=event.y)
+        send(self, events.LeftClickEvent(x=event.x, y=event.y))
 
 def _convert_color(c):
-    if c is None or c is Colors.transparent: return ''
+    if c is None or c is colors.transparent: return ''
     return '#%02X%02X%02X' % \
            (int(c.red*255), int(c.green*255), int(c.blue*255))
 
@@ -299,7 +299,9 @@ class RadioButton(ToggleButtonMixin, AbstractRadioButton):
     _tk_class = Radiobutton
 
     def _tk_toggle(self):
-        if self.group is not None:
+        if self.group is None:
+            self.modify(on=not self.on)
+        else:
             self.group.modify(value=self.value)
         send(self)
 
