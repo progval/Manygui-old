@@ -1,6 +1,6 @@
 Metadata-Version: 1.0
-Name: anygui
-Version: 0.1.2-dev
+Name: manygui
+Version: 0.1.3
 Summary: Generic GUI Package for Python
 Home-page: https://github.com/ProgVal/Manygui
 Author: Valentin Lorentz
